@@ -83,6 +83,17 @@ class AnalysisAnalyzer:
         analysis_data = self.game_analysis[game_id]
         agent_names = self.game_agents[game_id]
         
+        # Track talk_request_idx (number of TALK requests processed for this game)
+        if not hasattr(self, 'game_talk_request_idx'):
+            self.game_talk_request_idx = {}
+        
+        if game_id not in self.game_talk_request_idx:
+            self.game_talk_request_idx[game_id] = 0
+        
+        # Increment talk request index for this game
+        self.game_talk_request_idx[game_id] += 1
+        current_talk_request_idx = self.game_talk_request_idx[game_id]
+        
         # Process each talk entry
         for talk in packet.talk_history:
             from_agent = talk.agent
@@ -98,11 +109,7 @@ class AnalysisAnalyzer:
                 text, agent_names
             )
             
-            # Only process if there's a mention or group address
-            if not has_mention and not is_group_address:
-                continue
-            
-            # Determine message type
+            # Determine message type and create entry for ALL texts
             if is_group_address and not mentioned_agents:
                 # Pure group address
                 entry = AnalysisEntry(
@@ -111,7 +118,8 @@ class AnalysisAnalyzer:
                     to_agents=[],  # Empty list for group address
                     topic=text,
                     day=day,
-                    idx=idx
+                    idx=idx,
+                    talk_request_idx=current_talk_request_idx
                 )
                 analysis_data.add_entry(entry)
                 self.logger.debug(f"Added group address entry: {from_agent} -> all")
@@ -133,10 +141,25 @@ class AnalysisAnalyzer:
                     to_agents=mentioned_agents,
                     topic=text,
                     day=day,
-                    idx=idx
+                    idx=idx,
+                    talk_request_idx=current_talk_request_idx
                 )
                 analysis_data.add_entry(entry)
                 self.logger.debug(f"Added {message_type.value} entry: {from_agent} -> {mentioned_agents}")
+            
+            else:
+                # No agent mention or group address - save with type NONE
+                entry = AnalysisEntry(
+                    type=MessageType.NONE,
+                    from_agent=from_agent,
+                    to_agents=[],  # Empty list since no specific target
+                    topic=text,
+                    day=day,
+                    idx=idx,
+                    talk_request_idx=current_talk_request_idx
+                )
+                analysis_data.add_entry(entry)
+                self.logger.debug(f"Added none entry: {from_agent} (no specific target)")
     
     def save_analysis(self, game_id: str, game_dir: Optional[Path] = None):
         """Save analysis data for a specific game.
@@ -176,3 +199,5 @@ class AnalysisAnalyzer:
         del self.game_analysis[game_id]
         if game_id in self.game_agents:
             del self.game_agents[game_id]
+        if hasattr(self, 'game_talk_request_idx') and game_id in self.game_talk_request_idx:
+            del self.game_talk_request_idx[game_id]

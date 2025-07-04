@@ -1,0 +1,25 @@
+シュンイチ:
+  agent_name: シュンイチ
+  alive: true
+  seer_co: null
+  self_co: null
+ジョージ:
+  agent_name: ジョージ
+  alive: true
+  seer_co: null
+  self_co: null
+ダイスケ:
+  agent_name: ダイスケ
+  alive: true
+  seer_co: null
+  self_co: null
+メイ:
+  agent_name: メイ
+  alive: true
+  seer_co: null
+  self_co: null
+リン:
+  agent_name: リン
+  alive: true
+  seer_co: null
+  self_co: null

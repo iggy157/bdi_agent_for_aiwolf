@@ -13,6 +13,7 @@ class MessageType(str, Enum):
     POSITIVE = "positive"
     NEGATIVE = "negative"
     GROUP_ADDRESS = "group_address"
+    NONE = "none"  # For messages without agent mentions or group addresses
 
 
 @dataclass
@@ -52,6 +53,7 @@ class AnalysisEntry:
     topic: str
     day: int
     idx: int
+    talk_request_idx: int
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for YAML serialization."""
@@ -61,7 +63,8 @@ class AnalysisEntry:
             "to": self.to_agents,
             "topic": self.topic,
             "day": self.day,
-            "idx": self.idx
+            "idx": self.idx,
+            "talk_request_idx": self.talk_request_idx
         }
     
     @classmethod
@@ -73,7 +76,8 @@ class AnalysisEntry:
             to_agents=data["to"],
             topic=data["topic"],
             day=data["day"],
-            idx=data["idx"]
+            idx=data["idx"],
+            talk_request_idx=data.get("talk_request_idx", 0)  # Default to 0 for backwards compatibility
         )
 
 
