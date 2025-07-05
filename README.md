@@ -22,9 +22,10 @@ pip install -e .
 実行方法や設定などその他については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
 
 
-# aiwolf-nlp-server(https://github.com/aiwolfdial/aiwolf-nlp-server)
+# aiwolf-nlp-server
 
 人狼知能コンテスト（自然言語部門） のゲームサーバです。
+(https://github.com/aiwolfdial/aiwolf-nlp-server)
 
 ## 実行方法
 
