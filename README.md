@@ -1,4 +1,4 @@
-# aiwolf-nlp-agent-llm
+# bdi_agent_for_aiwolf
 
 人狼知能コンテスト（自然言語部門） のLLMを用いたサンプルエージェントです。
 
