@@ -25,6 +25,8 @@ from aiwolf_nlp_common.packet import Info, Packet, Request, Role, Setting, Statu
 
 from utils.agent_logger import AgentLogger
 from utils.stoppable_thread import StoppableThread
+from utils.status_tracker import StatusTracker
+from utils.co_extractor import COExtractor
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -58,6 +60,10 @@ class Agent:
         self.sent_whisper_count: int = 0
         self.llm_model: BaseChatModel | None = None
         self.llm_message_history: list[BaseMessage] = []
+        
+        # Status tracking
+        self.status_tracker = StatusTracker(config, name, game_id)
+        self.co_extractor = COExtractor(config)
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -118,6 +124,10 @@ class Agent:
             self.whisper_history: list[Talk] = []
             self.llm_message_history: list[BaseMessage] = []
         self.agent_logger.logger.debug(packet)
+        
+        # Update status tracking if we have info
+        if self.info and self.talk_history:
+            self._update_status_tracking()
 
     def get_alive_agents(self) -> list[str]:
         """生存しているエージェントのリストを取得する."""
@@ -239,6 +249,33 @@ class Agent:
 
     def finish(self) -> None:
         """ゲーム終了リクエストに対する処理を行う."""
+        # Save status.yml when game finishes
+        self.status_tracker.save_status()
+    
+    def _update_status_tracking(self) -> None:
+        """ステータストラッキングを更新."""
+        if not self.info:
+            return
+        
+        try:
+            # Extract self_co from talk history
+            self_co_results = self.co_extractor.extract_self_co(self.talk_history)
+            
+            # Extract seer_co from talk history
+            seer_co_results = self.co_extractor.extract_seer_co(self.talk_history)
+            
+            # Update status tracker
+            self.status_tracker.update_status(
+                self.info,
+                self.talk_history,
+                self_co_results,
+                seer_co_results,
+            )
+            
+            # Save status after each update
+            self.status_tracker.save_status()
+        except Exception as e:
+            self.agent_logger.logger.error(f"Failed to update status tracking: {e}")
 
     @timeout
     def action(self) -> str | None:  # noqa: C901, PLR0911
