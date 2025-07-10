@@ -1,0 +1,17 @@
+agents:
+- シュンイチ
+- ジョージ
+- ダイスケ
+- メイ
+- リン
+analysis_version: '1.0'
+end_time: '2025-07-04T23:10:58.243961'
+final_status:
+  シュンイチ: DEAD
+  ジョージ: ALIVE
+  ダイスケ: ALIVE
+  メイ: ALIVE
+  リン: ALIVE
+game_id: 01JZAW9461NN8CQ0ME5PP9GVJ7
+start_time: '2025-07-04T23:08:38.619352'
+total_days: 1

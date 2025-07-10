@@ -1,0 +1,25 @@
+アスカ:
+  agent_name: アスカ
+  alive: true
+  seer_co: null
+  self_co: null
+シオン:
+  agent_name: シオン
+  alive: true
+  seer_co: null
+  self_co: null
+ミドリ:
+  agent_name: ミドリ
+  alive: true
+  seer_co: null
+  self_co: null
+リン:
+  agent_name: リン
+  alive: true
+  seer_co: null
+  self_co: null
+ヴィクトリア:
+  agent_name: ヴィクトリア
+  alive: true
+  seer_co: null
+  self_co: null
