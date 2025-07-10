@@ -1,0 +1,15 @@
+- day: 0
+  from: セルヴァス
+  idx: 0
+  talk_request_idx: 1
+  to: []
+  topic: 皆様、昨夜は静かでしたね。何か気になることはありますか？
+  type: group_address
+- day: 0
+  from: アスカ
+  idx: 1
+  talk_request_idx: 1
+  to:
+  - セルヴァス
+  topic: セルヴァスさん、昨夜は特に変わったことはなかったように思います。皆さんの意見を聞かせてください。
+  type: positive

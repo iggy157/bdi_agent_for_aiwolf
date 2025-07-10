@@ -1,0 +1,25 @@
+アスカ:
+  agent_name: アスカ
+  alive: true
+  seer_co: null
+  self_co: null
+ケンジ:
+  agent_name: ケンジ
+  alive: true
+  seer_co: null
+  self_co: null
+シズエ:
+  agent_name: シズエ
+  alive: true
+  seer_co: null
+  self_co: null
+セルヴァス:
+  agent_name: セルヴァス
+  alive: true
+  seer_co: null
+  self_co: null
+ミオ:
+  agent_name: ミオ
+  alive: true
+  seer_co: null
+  self_co: null

@@ -27,6 +27,7 @@ from utils.agent_logger import AgentLogger
 from utils.stoppable_thread import StoppableThread
 from utils.status_tracker import StatusTracker
 from utils.co_extractor import COExtractor
+from utils.analysis_tracker import AnalysisTracker
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -64,6 +65,9 @@ class Agent:
         # Status tracking
         self.status_tracker = StatusTracker(config, name, game_id)
         self.co_extractor = COExtractor(config)
+        
+        # Analysis tracking
+        self.analysis_tracker = AnalysisTracker(config, name, game_id)
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -251,6 +255,9 @@ class Agent:
         """ゲーム終了リクエストに対する処理を行う."""
         # Save status.yml when game finishes
         self.status_tracker.save_status()
+        
+        # Save analysis.yml when game finishes
+        self.analysis_tracker.save_analysis()
     
     def _update_status_tracking(self) -> None:
         """ステータストラッキングを更新."""
@@ -274,6 +281,12 @@ class Agent:
             
             # Save status after each update
             self.status_tracker.save_status()
+            
+            # Update analysis tracker
+            self.analysis_tracker.analyze_talk(self.talk_history, self.info)
+            
+            # Save analysis after each update
+            self.analysis_tracker.save_analysis()
         except Exception as e:
             self.agent_logger.logger.error(f"Failed to update status tracking: {e}")
 
