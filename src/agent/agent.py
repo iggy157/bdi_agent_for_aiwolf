@@ -28,6 +28,7 @@ from utils.stoppable_thread import StoppableThread
 from utils.status_tracker import StatusTracker
 from utils.co_extractor import COExtractor
 from utils.analysis_tracker import AnalysisTracker
+from utils.my_log_tracker import MyLogTracker
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -68,6 +69,9 @@ class Agent:
         
         # Analysis tracking
         self.analysis_tracker = AnalysisTracker(config, name, game_id)
+        
+        # My log tracking
+        self.my_log_tracker = MyLogTracker(config, name, game_id)
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -215,12 +219,22 @@ class Agent:
         """囁きリクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request)
         self.sent_whisper_count = len(self.whisper_history)
+        
+        # 発話内容を記録
+        if response:
+            self.my_log_tracker.log_talk(response, "whisper", self.info)
+        
         return response or ""
 
     def talk(self) -> str:
         """トークリクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request)
         self.sent_talk_count = len(self.talk_history)
+        
+        # 発話内容を記録
+        if response:
+            self.my_log_tracker.log_talk(response, "talk", self.info)
+        
         return response or ""
 
     def daily_finish(self) -> None:
@@ -229,27 +243,51 @@ class Agent:
 
     def divine(self) -> str:
         """占いリクエストに対する応答を返す."""
-        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
+        
+        # アクション内容を記録
+        if response:
+            self.my_log_tracker.log_action("divine", response, self.info)
+        
+        return response
 
     def guard(self) -> str:
         """護衛リクエストに対する応答を返す."""
-        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
+        
+        # アクション内容を記録
+        if response:
+            self.my_log_tracker.log_action("guard", response, self.info)
+        
+        return response
 
     def vote(self) -> str:
         """投票リクエストに対する応答を返す."""
-        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
+        
+        # アクション内容を記録
+        if response:
+            self.my_log_tracker.log_action("vote", response, self.info)
+        
+        return response
 
     def attack(self) -> str:
         """襲撃リクエストに対する応答を返す."""
-        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
+        
+        # アクション内容を記録
+        if response:
+            self.my_log_tracker.log_action("attack", response, self.info)
+        
+        return response
 
     def finish(self) -> None:
         """ゲーム終了リクエストに対する処理を行う."""
@@ -258,6 +296,9 @@ class Agent:
         
         # Save analysis.yml when game finishes
         self.analysis_tracker.save_analysis()
+        
+        # Save my_log.yml when game finishes
+        self.my_log_tracker.save_my_log()
     
     def _update_status_tracking(self) -> None:
         """ステータストラッキングを更新."""
@@ -287,6 +328,9 @@ class Agent:
             
             # Save analysis after each update
             self.analysis_tracker.save_analysis()
+            
+            # Save my_log after each update
+            self.my_log_tracker.save_my_log()
         except Exception as e:
             self.agent_logger.logger.error(f"Failed to update status tracking: {e}")
 

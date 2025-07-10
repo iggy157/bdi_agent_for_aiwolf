@@ -1,0 +1,10 @@
+1:
+  content: うーん、誰が怪しいかな…皆さんの意見も聞きたいな！
+  type: question
+  from: ミオ
+  to: all
+2:
+  content: ミオさん、そうですね。まずは皆さんの意見を聞くのが良いと思います。
+  type: 'null'
+  from: ジョナサン
+  to: ミオ

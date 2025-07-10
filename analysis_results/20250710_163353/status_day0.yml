@@ -1,0 +1,25 @@
+ジョナサン:
+  agent_name: ジョナサン
+  alive: true
+  seer_co: null
+  self_co: null
+タクミ:
+  agent_name: タクミ
+  alive: true
+  seer_co: null
+  self_co: null
+ミオ:
+  agent_name: ミオ
+  alive: true
+  seer_co: null
+  self_co: null
+ミサキ:
+  agent_name: ミサキ
+  alive: true
+  seer_co: null
+  self_co: null
+ミナト:
+  agent_name: ミナト
+  alive: true
+  seer_co: null
+  self_co: null
