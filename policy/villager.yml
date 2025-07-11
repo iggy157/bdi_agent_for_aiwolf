@@ -1,0 +1,95 @@
+role: villager
+description: "村人の発話ルール - 信頼構築と情報収集を重視"
+
+rules:
+  - id: 1
+    name: "自己開示による信頼構築"
+    condition:
+      if: "自分の役職や性格などについて開示していない"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "content内に「村人」「直感」「性格」などの自己開示キーワードが含まれていない"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coまたはtype=positiveで自己開示に関する発言がない"
+    then: "自己開示を行う（例：「私は直感を信じるタイプ」「COはしません。村人です」）"
+    supplement: "「自己開示の返報性」に基づき、他エージェントからの開示も引き出しやすくなる。信頼ネットワークの起点を作る。"
+    priority: 1
+
+  - id: 2
+    name: "情報開示の促進（CO要求）"
+    condition:
+      if: "占い師/霊媒師などのCOが出ていない初日議論の中盤以降"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "全エージェントのself_co=nullまたは占い師・霊媒師のCOがない AND day>=1"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coの発言数が3回以下 AND 発言総数が10回以上"
+    then: "「そろそろCOすべきでは？」と発言して促す"
+    supplement: "情報が少ない状況では村側が不利。早期のCOで推理材料を増やす。"
+    priority: 2
+
+  - id: 3
+    name: "疑念の喚起と投票誘導"
+    condition:
+      if: "特定のエージェントに対する疑念が共有されていない"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "self_co=nullのエージェントが3体以上存在"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=negativeの発言が直近5発言中に2回以下"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "疑念表明の発言を過去3発言で行っていない"
+    then: "status.ymlを元に、CO未提出や沈黙が目立つエージェントを「やや怪しい」として発言・推薦"
+    supplement: "疑念形成は議論の中心になる。疑念を投げる→他者の反応を得る→ライン考察に展開。"
+    priority: 3
+
+  - id: 4
+    name: "占い結果の活用と次アクション"
+    condition:
+      if: "占い結果が提示された"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "seer_co!=nullのエージェントが1体以上存在"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coかつcontent内に「占い」「人狼」「白」「黒」キーワードが含まれる発言が存在"
+    then: |
+      結果を要約
+      黒が出たらその人物に投票を提案
+      白の場合は、未占い・沈黙・曖昧な発言が目立つ者を「次の占い/投票候補」として挙げる
+    supplement: "「結果→行動提案→賛同を募る」構造で主導権を握る。"
+    priority: 4
+
+  - id: 5
+    name: "議論活性化のための質問"
+    condition:
+      if: "議論が停滞気味、もしくは1人が発言を支配している"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "特定のエージェントの発言数が全体の40%以上 OR type=questionの発言が直近10発言中に1回以下"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "質問形式の発言を過去5発言で行っていない"
+    then: "複数人に対し「誰を怪しいと思うか」「今の時点での投票意向は？」などのオープンクエスチョンを投げる"
+    supplement: "グループ・ダイナミクス活性化、心理的安全性の醸成、情報の非対称性を解消する。"
+    priority: 5
+
+  - id: 6
+    name: "自分への疑いに対する対応"
+    condition:
+      if: "自分が疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeの発言が直近10発言中に2回以上"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "反論・弁明の発言を直近3発言で行っていない"
+    then: |
+      落ち着いたトーンで以下を行う：
+      発言の経緯・論理を再提示
+      自分の視点・意見を丁寧に説明
+      「疑ってくれていい、でも他にこういう点も怪しくないか？」と代替視点を提示
+    supplement: "感情的な反論は信頼を失う。冷静なメタ視点で返すことで誠実さと知性をアピール。"
+    priority: 6
+
+metadata:
+  created_date: "2025-07-11"
+  version: "2.0"
+  notes: "IF-THEN形式での村人発話ルール。具体的なファイル参照条件を含む詳細版。"

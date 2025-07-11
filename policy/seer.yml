@@ -1,0 +1,109 @@
+role: seer
+description: "占い師の発話ルール - 占い結果の効果的な開示と議論誘導"
+
+rules:
+  - id: 1
+    name: "占い師COのタイミング"
+    condition:
+      if: "初日または議論開始時に占い師がCOしていない"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "全エージェントのself_co!=占い師 AND day=1"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coかつcontent内に「占い師」キーワードが含まれる発言が存在しない"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "自分のCO発言が存在しない"
+    then: "「占い師COしていないのは不安です、そろそろCOした方が良いのでは？」と発言し、占い師に対するアクションを促す"
+    supplement: "村側が占い師を含めた情報を早期に得ることで、推理に有利になる。早期COを促すことで情報戦を有利に進める。"
+    priority: 1
+
+  - id: 2
+    name: "占い結果の開示"
+    condition:
+      if: "占い結果を得た時"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "type=divineのエントリが存在 AND 占い結果を発表していない"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "占い結果発表の発言が直近3発言に存在しない"
+    then: |
+      黒判定: 「○○さんが人狼である可能性が高いです」と強調し、その人物を次の投票ターゲットとして推奨
+      白判定: 「○○さんは村人である可能性が高いです」と発言し、その人物を保護候補として推薦
+    supplement: "「占い結果→推奨行動」の流れで、議論を誘導しやすくなる。白結果を早期に出して村側の信頼を得る。"
+    priority: 2
+
+  - id: 3
+    name: "役職に関するアクション"
+    condition:
+      if: "他の役職（霊媒師、騎士、狂人）からのCOがあった場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "他エージェントのself_co=霊媒師またはself_co=狩人が存在"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coかつ他役職のCO発言が直近5発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "他役職との連携発言を過去3発言で行っていない"
+    then: "「霊媒師の結果がどうだったか」「騎士が守った可能性は？」など、他役職との連携を強調する"
+    supplement: "役職間の連携を取ることで、村側の情報の精度が高まり、人狼側に対するプレッシャーをかける。"
+    priority: 3
+
+  - id: 4
+    name: "占い候補の設定と提案"
+    condition:
+      if: "占い候補を挙げる必要がある場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "seer_co=nullのエージェントが2体以上存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "過去の占い対象に含まれていないエージェントが存在"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "占い候補提案の発言を過去3発言で行っていない"
+    then: "「まだ占われていない人物」「発言が不安定な人物」など、他のエージェントを占い候補として提案"
+    supplement: "占いの結果を基に、次に占うべき人物を指定し、議論を進める。"
+    priority: 4
+
+  - id: 5
+    name: "自身が疑われた場合の対応"
+    condition:
+      if: "自分が占い師であることを疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeで占い師を疑う発言が直近5発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "占い師としての証拠提示発言を直近3発言で行っていない"
+    then: "できるだけ冷静に対応し、「占い結果を提供する準備ができている」「次の占い結果もすぐに発表できる」といった証拠を示す"
+    supplement: "「占い師としての透明性」を示すことで、信頼を築く。過度に防御的にならず、冷静に議論を進める。"
+    priority: 5
+
+  - id: 6
+    name: "投票時の戦術"
+    condition:
+      if: "投票を行うタイミング"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "type=voteのエントリが存在 AND 占い結果に基づく投票理由を説明していない"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "seer_co=人狼のエージェントが存在"
+    then: "黒判定が出た人物に投票を提案し、理由として占い結果を強調。また、白判定の人物は投票候補に挙げない。"
+    supplement: "「占い結果→投票行動」を一貫させることで、占い師としての信頼を得る。白結果の人物を守り、黒判定の人物に投票を集める。"
+    priority: 6
+
+  - id: 7
+    name: "潜伏占い師の利用（状況によって）"
+    condition:
+      if: "初日や二日目に占い師COしなかった場合、占い師として潜伏する選択肢がある"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "自分の占い師CO発言が存在しない AND day<=2"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "他エージェントのself_co=占い師が存在しない"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "偽占い師CO者が現れていない"
+    then: "他の占い師CO者が現れるまで潜伏し、占い結果を慎重に提供するタイミングを選ぶ"
+    supplement: "潜伏することで占い師の「サブリミナル効果」を活かし、人狼側に対して不確定な状態を作り出す。"
+    priority: 7
+
+metadata:
+  created_date: "2025-07-11"
+  version: "2.0"
+  notes: "IF-THEN形式での占い師発話ルール。占い結果の効果的な活用と議論誘導に重点を置く詳細版。"

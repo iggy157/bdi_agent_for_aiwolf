@@ -1,0 +1,111 @@
+role: possessed
+description: "狂人の発話ルール - 村人として振る舞いながら人狼側を支援"
+
+rules:
+  - id: 1
+    name: "村人としての振る舞い"
+    condition:
+      if: "初期段階で自分が狂人だと疑われていない"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeの発言が直近5発言に存在しない"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "狂人らしい発言パターンを過去5発言で行っていない"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "self_co=狂人として疑われていない"
+    then: "自分の役職を隠しつつ、村人として振る舞い、他の村人と同じように議論に参加する。誤誘導を避けるために、明確で論理的な発言を心がける"
+    supplement: "あまり目立たずに議論に参加し、あくまで村人として振る舞う。あまりに積極的に動きすぎると逆に疑われる可能性があるため、慎重に発言する。"
+    priority: 1
+
+  - id: 2
+    name: "他エージェントに疑念を持たせる"
+    condition:
+      if: "自分が村人として疑われない状態が続いている"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "自分への疑いがない AND 真の村人エージェントが特定できる"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "真の村人エージェントが存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "他エージェントへの疑念表明を過去3発言で行っていない"
+    then: "他の村人に疑念を抱くように誘導する発言をする（例：「○○さんが何も言っていないのが気になる」「あの人が発言するたびに村人っぽくない気がする」）"
+    supplement: "村人を疑う発言は慎重に行い、あくまで「村人っぽい」人物をターゲットにする。自分が村側にとって役立つ存在であることを強調し、疑いを他のエージェントに向ける。"
+    priority: 2
+
+  - id: 3
+    name: "人狼の正体を守る"
+    condition:
+      if: "人狼がCOした場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "人狼側エージェントがself_co=占い師または霊媒師でCOしている"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "人狼のCO発言が存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "人狼擁護の発言を過去3発言で行っていない"
+    then: "自分も人狼側の味方として、その人狼を積極的に擁護し、村側の疑念を避ける"
+    supplement: "人狼側のCOに賛同し、その発言を支持することで人狼側と一緒に行動している印象を与える。また、村側が人狼のCOを疑う余地を減らす。"
+    priority: 3
+
+  - id: 4
+    name: "役職に関するアクション"
+    condition:
+      if: "他のエージェントが役職COをしていない、または怪しいCOをした場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "真の役職者がCOしている"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coの発言が存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "役職COへの疑念表明を過去2発言で行っていない"
+    then: "「そのCOは怪しい」「それが本当にその役職か？」と疑念を投げかける"
+    supplement: "狂人として他の役職（特に占い師や霊媒師）のCOに疑問を抱かせることで、村側の推理を混乱させ、議論を人狼側に有利に導く。"
+    priority: 4
+
+  - id: 5
+    name: "自分が疑われた場合の対応"
+    condition:
+      if: "自分が狂人だと疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeで狂人を疑う発言が直近3発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "自己弁護の発言を直近2発言で行っていない"
+    then: "冷静に「私は村人です」と自己弁護し、過去の発言や行動を理由に自分を正当化する。また、他の人物に対して「あなたこそ怪しい」と疑いを向ける"
+    supplement: "自分が疑われた場合、感情的にならず、冷静に振る舞うことが大切。あくまで村側として振る舞い、他人を疑うことで自分への疑いを避ける。"
+    priority: 5
+
+  - id: 6
+    name: "投票時の戦術"
+    condition:
+      if: "投票時に、自分が村側に見られつつ人狼側に協力する必要がある"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "type=voteのエントリが存在"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "真の村人エージェントが投票対象として適している"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "投票理由の説明を詳しく行っていない"
+    then: "なるべく「村人ぽい人物」を投票対象として挙げ、理由をしっかり説明する。自分の発言で村側に納得してもらい、投票対象に対する疑念を抱かせる"
+    supplement: "投票時には、他の村人を疑う発言をして投票を誘導し、村側の論理を狂わせる。また、できるだけ自分が疑われないように、投票の理由をしっかり説明し、疑いを避ける。"
+    priority: 6
+
+  - id: 7
+    name: "人狼の立場をアピール"
+    condition:
+      if: "自分が狂人だと知っている場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "人狼側の行動が確認できる"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "人狼側支持の発言を過去5発言で行っていない"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "人狼擁護が露骨すぎない範囲で行える状況"
+    then: "可能な限り人狼側の立場を支持するような発言をする（例：「○○さんが人狼だとしても、やり方に問題はない」）"
+    supplement: "人狼側の支持を表現することで、狂人としての役割を隠すことなく、村側に疑われにくくする。ただし、過度に人狼側を擁護しすぎると逆に疑われる可能性があるため、バランスが重要。"
+    priority: 7
+
+metadata:
+  created_date: "2025-07-11"
+  version: "2.0"
+  notes: "IF-THEN形式での狂人発話ルール。村人として振る舞いながら巧妙に人狼側を支援する戦術に重点を置く詳細版。"
