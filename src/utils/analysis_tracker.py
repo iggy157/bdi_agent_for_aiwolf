@@ -261,8 +261,9 @@ class AnalysisTracker:
                 
                 f.write("\n\n")
         
-        # analysis.yml保存後にselect_sentence.ymlも更新
+        # analysis.yml保存後にselect_sentence.ymlとintention.ymlも更新
         self._update_select_sentence()
+        self._update_intention()
     
     def _update_select_sentence(self) -> None:
         """select_sentence.ymlを更新."""
@@ -274,3 +275,14 @@ class AnalysisTracker:
             tracker.process_select_sentence()
         except Exception as e:
             print(f"Failed to update select_sentence: {e}")
+    
+    def _update_intention(self) -> None:
+        """intention.ymlを更新."""
+        try:
+            from .intention_tracker import IntentionTracker
+            
+            # IntentionTrackerを使って更新
+            tracker = IntentionTracker(self.config, self.agent_name, self.game_id)
+            tracker.process_intention()
+        except Exception as e:
+            print(f"Failed to update intention: {e}")
