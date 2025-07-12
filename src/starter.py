@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from utils.agent_utils import init_agent_from_packet
-from analysis.packet_analyzer import PacketAnalyzer
+# from analysis.packet_analyzer import PacketAnalyzer
 
 if TYPE_CHECKING:
     from agent.agent import Agent
@@ -58,29 +58,29 @@ def handle_game_session(
 ) -> None:
     """ゲームセッションの処理."""
     agent: Agent | None = None
-    packet_analyzer: PacketAnalyzer | None = None
+    # packet_analyzer: PacketAnalyzer | None = None
     
     # Initialize packet analyzer if analysis is enabled
-    if config.get("analysis", {}).get("enabled", True):
-        try:
-            packet_analyzer = PacketAnalyzer(config)
-            logger.info("Packet analyzer initialized for %s", name)
-        except Exception as ex:
-            logger.error("Failed to initialize packet analyzer for %s: %s", name, ex)
-            logger.error("Analysis system will be disabled for this session")
-            packet_analyzer = None
+    # if config.get("analysis", {}).get("enabled", True):
+    #     try:
+    #         packet_analyzer = PacketAnalyzer(config)
+    #         logger.info("Packet analyzer initialized for %s", name)
+    #     except Exception as ex:
+    #         logger.error("Failed to initialize packet analyzer for %s: %s", name, ex)
+    #         logger.error("Analysis system will be disabled for this session")
+    #         packet_analyzer = None
     
     try:
         while True:
             packet = client.receive()
             
             # Analyze packet if analyzer is available
-            if packet_analyzer:
-                try:
-                    packet_analyzer.process_packet(packet)
-                except Exception as ex:
-                    logger.error("Packet analysis failed for %s: %s", packet.request, ex)
-                    logger.debug("Packet analysis error details", exc_info=True)
+            # if packet_analyzer:
+            #     try:
+            #         packet_analyzer.process_packet(packet)
+            #     except Exception as ex:
+            #         logger.error("Packet analysis failed for %s: %s", packet.request, ex)
+            #         logger.debug("Packet analysis error details", exc_info=True)
             
             if packet.request == Request.NAME:
                 client.send(name)
@@ -98,12 +98,13 @@ def handle_game_session(
                 break
     finally:
         # Shutdown packet analyzer if it was initialized
-        if packet_analyzer:
-            try:
-                packet_analyzer.shutdown()
-                logger.info("Packet analyzer shutdown for %s", name)
-            except Exception as ex:
-                logger.warning("Failed to shutdown packet analyzer: %s", ex)
+        # if packet_analyzer:
+        #     try:
+        #         packet_analyzer.shutdown()
+        #         logger.info("Packet analyzer shutdown for %s", name)
+        #     except Exception as ex:
+        #         logger.warning("Failed to shutdown packet analyzer: %s", ex)
+        pass
 
 
 def connect(config: dict[str, Any], idx: int = 1) -> None:

@@ -59,14 +59,14 @@ class DesireTracker:
             self.llm_model = None
     
     def generate_desire_from_best_policy(self, best_policy: List[Dict[str, Any]], 
-                                       game_name: str, agent_name: str, 
+                                       game_id: str, agent_name: str, 
                                        info: Optional[Any] = None) -> str:
         """
         best_policyからLLMを使ってdesire文を生成
         
         Args:
             best_policy: 条件に一致しなかったpolicyルールのリスト
-            game_name: ゲーム名
+            game_id: ゲームID
             agent_name: エージェント名
             info: ゲーム情報（オプション）
             
@@ -186,19 +186,19 @@ class DesireTracker:
         
         return f"現在の状況に応じて{then_action[:50]}..."
     
-    def save_desire(self, desire_text: str, game_name: str, agent_name: str, 
+    def save_desire(self, desire_text: str, game_id: str, agent_name: str, 
                    info: Optional[Any] = None) -> None:
         """
         生成されたdesire文をファイルに保存
         
         Args:
             desire_text: 生成されたdesire文
-            game_name: ゲーム名
+            game_id: ゲームID
             agent_name: エージェント名
             info: ゲーム情報
         """
         # 保存先ディレクトリを作成
-        save_dir = self.base_path / game_name / agent_name
+        save_dir = self.base_path / game_id / agent_name
         save_dir.mkdir(parents=True, exist_ok=True)
         
         # desire.ymlファイルのパス
@@ -229,7 +229,7 @@ class DesireTracker:
         # ファイルに保存
         output_data = {
             "agent_name": agent_name,
-            "game_name": game_name,
+            "game_id": game_id,
             "total_desires": len(existing_desires),
             "desires": existing_desires
         }
@@ -239,14 +239,14 @@ class DesireTracker:
                      allow_unicode=True, indent=2)
     
     def generate_and_save_desire(self, best_policy: List[Dict[str, Any]], 
-                               game_name: str, agent_name: str, 
+                               game_id: str, agent_name: str, 
                                info: Optional[Any] = None) -> str:
         """
         best_policyからdesire文を生成し、保存する統合メソッド
         
         Args:
             best_policy: 条件に一致しなかったpolicyルールのリスト
-            game_name: ゲーム名
+            game_id: ゲームID
             agent_name: エージェント名
             info: ゲーム情報
             
@@ -255,10 +255,10 @@ class DesireTracker:
         """
         # desire文を生成
         desire_text = self.generate_desire_from_best_policy(
-            best_policy, game_name, agent_name, info
+            best_policy, game_id, agent_name, info
         )
         
         # ファイルに保存
-        self.save_desire(desire_text, game_name, agent_name, info)
+        self.save_desire(desire_text, game_id, agent_name, info)
         
         return desire_text
