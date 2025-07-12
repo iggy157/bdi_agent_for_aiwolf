@@ -1,0 +1,14 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分の立場を強化したい。また、投票時には村人ぽい人物を狙って投票を誘導し、村側の混乱を引き起こしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-13T00:34:15.837565'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をし、議論を混乱させて自分への疑いを避けたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-13T00:35:37.340395'
+game_id: 01JZZMB55Q55S53MQ50SNXH11T
+total_desires: 2

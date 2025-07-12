@@ -1,0 +1,37 @@
+# Request 3
+1:
+  content: みんな、今日はどんな感じ？何か気になることや話したいことがあったら、どんどん言ってね！私もみんなの意見を聞きたいな。
+  type: question
+  from: ミオ
+  to: all
+  request_count: 3
+
+2:
+  content: ミオ、ありがとう！今日は特に気になることはないけれど、みんなの意見を聞くのは大事だと思う。誰か何か気になることがあれば、ぜひ教えてほしいな！
+  type: positive
+  from: メイ
+  to: ミオ
+  request_count: 3
+
+3:
+  content: 皆さん、昼の時間です。ミオさんやメイさんの言う通り、意見を出し合うことは重要です。何か気になることや話したいことがあれば、ぜひお話ししましょう。私も皆さんの意見を聞きたいです。
+  type: null
+  from: ミナコ
+  to: ミオ,メイ
+  request_count: 3
+
+4:
+  content: 皆さん、意見を出し合うのは本当に大切ですね。私も皆さんのお話を聞きたいです。何か気になることや質問があれば、どうぞ遠慮なく言ってくださいね。
+  type: positive
+  from: シズエ
+  to: all
+  request_count: 3
+
+5:
+  content: みなさん、意見を出し合う時間ですね。私も皆さんの考えを聞きたいと思います。誰か気になる人や状況はありますか？
+  type: question
+  from: トシオ
+  to: all
+  request_count: 3
+
+

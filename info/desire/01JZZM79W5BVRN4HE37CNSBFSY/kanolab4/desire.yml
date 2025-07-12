@@ -1,0 +1,9 @@
+agent_name: kanolab4
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を持たせる発言をして、疑いを自分から遠ざけたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-13T00:31:56.466045'
+game_id: 01JZZM79W5BVRN4HE37CNSBFSY
+total_desires: 1

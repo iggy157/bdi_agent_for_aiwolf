@@ -8,6 +8,7 @@ from pathlib import Path
 from time import sleep
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
+import yaml
 from dotenv import load_dotenv
 from jinja2 import Template
 from langchain_core.messages import AIMessage, HumanMessage
@@ -173,6 +174,7 @@ class Agent:
             "role": self.role,
             "sent_talk_count": self.sent_talk_count,
             "sent_whisper_count": self.sent_whisper_count,
+            "intention_data": self._get_latest_intention_data(),
         }
         template: Template = Template(prompt)
         prompt = template.render(**key).strip()
@@ -409,3 +411,49 @@ class Agent:
             case _:
                 pass
         return None
+
+    def _get_latest_intention_data(self) -> dict[str, Any] | None:
+        """最新のintention data（request_countが最大）を取得."""
+        if not self.info or not self.info.game_id:
+            return None
+        
+        try:
+            import ulid
+            from datetime import UTC, datetime
+            
+            # ULIDからタイムスタンプを取得
+            ulid_obj = ulid.parse(self.info.game_id)
+            tz = datetime.now(UTC).astimezone().tzinfo
+            game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().float / 1000, tz=tz).strftime(
+                "%Y%m%d%H%M%S%f",
+            )[:-3]
+            
+            # intentionファイルのパス
+            intention_file = Path("info") / "intention" / game_timestamp / self.agent_name / "intention.yml"
+            
+            if not intention_file.exists():
+                return None
+            
+            # intentionファイルを読み込み
+            with open(intention_file, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+            
+            if not data:
+                return None
+            
+            # 最新のrequest_count（最大値）のデータを取得
+            max_request_count = max(int(key) if isinstance(key, str) and key.isdigit() else key for key in data.keys())
+            latest_intention = data.get(max_request_count)
+            
+            if latest_intention:
+                return {
+                    "request_count": max_request_count,
+                    "consist": latest_intention.get("consist", ""),
+                    "content": latest_intention.get("content", "")
+                }
+            
+            return None
+            
+        except Exception as e:
+            self.agent_logger.logger.warning(f"Failed to load intention data: {e}")
+            return None

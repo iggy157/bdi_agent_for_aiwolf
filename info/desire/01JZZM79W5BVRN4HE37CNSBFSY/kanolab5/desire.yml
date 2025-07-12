@@ -1,0 +1,9 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は占い師が早期にCOするよう促し、村側の情報を早めに得たい。また、他の役職との連携を強調して、村の情報精度を高め、狼にプレッシャーをかけたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-13T00:32:02.115752'
+game_id: 01JZZM79W5BVRN4HE37CNSBFSY
+total_desires: 1
