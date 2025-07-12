@@ -29,6 +29,8 @@ from utils.status_tracker import StatusTracker
 from utils.co_extractor import COExtractor
 from utils.analysis_tracker import AnalysisTracker
 from utils.my_log_tracker import MyLogTracker
+from utils.policy_evaluator import PolicyEvaluator
+from utils.desire import DesireTracker
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -72,6 +74,11 @@ class Agent:
         
         # My log tracking
         self.my_log_tracker = MyLogTracker(config, name, game_id)
+        
+        # Policy and desire tracking
+        self.policy_evaluator = PolicyEvaluator()
+        self.desire_tracker = DesireTracker(config)
+        self.game_id = game_id
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -228,6 +235,9 @@ class Agent:
 
     def talk(self) -> str:
         """トークリクエストに対する応答を返す."""
+        # ポリシー評価とdesire生成を実行
+        self._evaluate_policy_and_generate_desire()
+        
         response = self._send_message_to_llm(self.request)
         self.sent_talk_count = len(self.talk_history)
         
@@ -333,6 +343,35 @@ class Agent:
             self.my_log_tracker.save_my_log()
         except Exception as e:
             self.agent_logger.logger.error(f"Failed to update status tracking: {e}")
+
+    def _evaluate_policy_and_generate_desire(self) -> None:
+        """ポリシー評価とdesire生成を実行."""
+        if not self.info:
+            return
+        
+        try:
+            # エージェントの役職名を取得
+            role_name = self.role.value.lower()
+            
+            # ポリシールールを評価して条件に一致しないルールを取得
+            best_policy = self.policy_evaluator.evaluate_policy_rules(
+                role_name, 
+                self.game_id, 
+                self.agent_name
+            )
+            
+            # best_policyからdesire文を生成して保存
+            if best_policy:
+                self.desire_tracker.generate_and_save_desire(
+                    best_policy,
+                    self.game_id,
+                    self.agent_name,
+                    self.info
+                )
+                self.agent_logger.logger.info(f"Generated desire for {self.agent_name}")
+            
+        except Exception as e:
+            self.agent_logger.logger.error(f"Failed to evaluate policy and generate desire: {e}")
 
     @timeout
     def action(self) -> str | None:  # noqa: C901, PLR0911
