@@ -1,0 +1,30 @@
+# Request 2
+1:
+  content: Over
+  type: null
+  from: ジョージ
+  to: null
+  request_count: 2
+
+2:
+  content: ジョージさん、何か気になることがあったら教えてください！みんなで考えを共有しましょう！
+  type: question
+  from: ミオ
+  to: ジョージ
+  request_count: 2
+
+3:
+  content: ジョージさん、何か気になることがあったらぜひ教えてください！私たちみんなで一緒に考えましょう！
+  type: positive
+  from: リン
+  to: ジョージ
+  request_count: 2
+
+4:
+  content: ジョージさん、私たちが一緒に考えるためにも、気になることをぜひ教えてください！あなたの意見が大事です。
+  type: question
+  from: メイ
+  to: ジョージ
+  request_count: 2
+
+

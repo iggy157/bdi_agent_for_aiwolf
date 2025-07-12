@@ -1,0 +1,14 @@
+agent_name: kanolab4
+desires:
+- day: 0
+  desire: 私は占い師や霊媒師のCOを促し、早期の情報開示によって推理材料を増やしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-12T23:15:43.839660'
+- day: 0
+  desire: 私は占い師や霊媒師のCOを促し、情報を増やして村の推理を有利に進めたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-12T23:18:35.033435'
+game_id: 01JZZFTMW62SZPEV2QSVRYCPCM
+total_desires: 2
