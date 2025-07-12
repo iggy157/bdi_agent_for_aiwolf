@@ -31,11 +31,14 @@ class AnalysisTracker:
         self.packet_idx = 0
         
         # 分析履歴を保存する辞書
-        # {packet_idx: [{"content": ..., "type": ..., "from": ..., "to": ...}, ...]}
+        # {packet_idx: [{"content": ..., "type": ..., "from": ..., "to": ..., "request_count": ...}, ...]}
         self.analysis_history: dict[int, list[dict[str, Any]]] = {}
         
         # 前回分析したトークの数を記録
         self.last_analyzed_talk_count = 0
+        
+        # リクエストカウンターを初期化
+        self.request_count = 0
         
         # LLMクライアントの初期化
         self.llm_client = COExtractor(config)
@@ -60,6 +63,7 @@ class AnalysisTracker:
         self,
         talk_history: list[Talk],
         info: Info,
+        request_count: int | None = None,
     ) -> None:
         """トーク履歴を分析してanalysis.ymlを更新."""
         # 新しいトーク履歴のエントリだけを分析
@@ -67,6 +71,10 @@ class AnalysisTracker:
         
         if not new_talks:
             return  # 新しいトークがない場合は何もしない
+        
+        # request_countが渡された場合は更新
+        if request_count is not None:
+            self.request_count = request_count
         
         self.packet_idx += 1
         
@@ -102,6 +110,7 @@ class AnalysisTracker:
                 "type": "null",
                 "from": talk.agent,
                 "to": "null",
+                "request_count": self.request_count,
             }
         
         # 基本情報を抽出
@@ -117,6 +126,7 @@ class AnalysisTracker:
             "type": message_type,
             "from": from_agent,
             "to": to_agents,
+            "request_count": self.request_count,
         }
     
     def _analyze_message_type(
@@ -218,21 +228,34 @@ class AnalysisTracker:
     
     def save_analysis(self) -> None:
         """analysis.ymlファイルに保存."""
-        # YAMLフォーマットに変換
-        yaml_data = {}
+        # request_countごとにグループ化
+        request_groups: dict[int, list[dict[str, Any]]] = {}
         
-        # 各発話ごとに個別のエントリを作成
-        entry_counter = 1
+        # 全エントリをrequest_countでグループ化
         for packet_idx, entries in self.analysis_history.items():
             for entry in entries:
-                yaml_data[entry_counter] = {
-                    "content": entry["content"],
-                    "type": entry["type"],
-                    "from": entry["from"],
-                    "to": entry["to"],
-                }
-                entry_counter += 1
+                request_count = entry.get("request_count", 0)
+                if request_count not in request_groups:
+                    request_groups[request_count] = []
+                request_groups[request_count].append(entry)
         
-        # YAMLファイルに書き込み
+        # YAMLファイルに書き込み（カスタムフォーマット）
         with open(self.analysis_file, "w", encoding="utf-8") as f:
-            yaml.dump(yaml_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            entry_counter = 1
+            for request_count in sorted(request_groups.keys()):
+                # リクエストヘッダーを書き込み
+                f.write(f"# Request {request_count}\n")
+                
+                # そのリクエストの全エントリを書き込み
+                for i, entry in enumerate(request_groups[request_count]):
+                    f.write(f"{entry_counter}:\n")
+                    f.write(f"  content: {entry['content']}\n")
+                    f.write(f"  type: {entry['type']}\n")
+                    f.write(f"  from: {entry['from']}\n")
+                    f.write(f"  to: {entry['to']}\n")
+                    f.write(f"  request_count: {entry.get('request_count', 0)}\n")
+                    if i < len(request_groups[request_count]) - 1:
+                        f.write("\n")
+                    entry_counter += 1
+                
+                f.write("\n\n")

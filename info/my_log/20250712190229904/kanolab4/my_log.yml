@@ -1,0 +1,21 @@
+1:
+  timestamp: '2025-07-12T10:02:39.322866+00:00'
+  type: talk
+  content: リンの言う通りだね。みんなで協力して人狼を見つけることが大切だよ。誰か気になる行動をしている人はいないかな？話してみよう！
+  agent: kanolab4
+  day: 0
+  game_id: 01JZZ1C5MGKGPZSM540S9R4RAY
+2:
+  timestamp: '2025-07-12T10:04:05.779811+00:00'
+  type: talk
+  content: みんなの意見を聞いて、協力していくのが大事だね。私も周りをよく観察して、怪しい行動に気を付けるよ。誰か気になる人がいたら、遠慮せずに発言してね！
+  agent: kanolab4
+  day: 0
+  game_id: 01JZZ1C5MGKGPZSM540S9R4RAY
+3:
+  timestamp: '2025-07-12T10:05:12.170432+00:00'
+  type: talk
+  content: みんな、まだ具体的な怪しい行動がないみたいだけど、これからの議論で新しい情報が出てくるかもしれないね。引き続き観察して、何か気になることがあればどんどん発言していこう！一緒に人狼を見つけよう！
+  agent: kanolab4
+  day: 0
+  game_id: 01JZZ1C5MGKGPZSM540S9R4RAY

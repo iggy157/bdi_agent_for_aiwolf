@@ -1,0 +1,9 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私はそろそろ占い師や霊媒師のCOを促し、村側の情報を増やして推理を進めたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-12T19:17:17.990132'
+game_id: 01JZZ266V6G36394NNXAYEVABZ
+total_desires: 1

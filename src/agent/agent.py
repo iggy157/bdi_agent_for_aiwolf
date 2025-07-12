@@ -65,6 +65,9 @@ class Agent:
         self.llm_model: BaseChatModel | None = None
         self.llm_message_history: list[BaseMessage] = []
         
+        # Request counter for analysis tracking
+        self.total_request_count: int = 0
+        
         # Status tracking
         self.status_tracker = StatusTracker(config, name, game_id)
         self.co_extractor = COExtractor(config)
@@ -138,6 +141,10 @@ class Agent:
             self.talk_history: list[Talk] = []
             self.whisper_history: list[Talk] = []
             self.llm_message_history: list[BaseMessage] = []
+            self.total_request_count = 0  # リセット
+        else:
+            # リクエストカウンターをインクリメント
+            self.total_request_count += 1
         self.agent_logger.logger.debug(packet)
         
         # Update status tracking if we have info
@@ -333,8 +340,8 @@ class Agent:
             # Save status after each update
             self.status_tracker.save_status()
             
-            # Update analysis tracker
-            self.analysis_tracker.analyze_talk(self.talk_history, self.info)
+            # Update analysis tracker with current request count
+            self.analysis_tracker.analyze_talk(self.talk_history, self.info, self.total_request_count)
             
             # Save analysis after each update
             self.analysis_tracker.save_analysis()

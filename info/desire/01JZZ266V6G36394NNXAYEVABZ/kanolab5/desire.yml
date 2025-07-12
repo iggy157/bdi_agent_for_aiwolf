@@ -1,0 +1,14 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分の存在を村側にとって有益だと印象づけたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-12T19:16:51.453985'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分の立場を強化したい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-12T19:17:41.531066'
+game_id: 01JZZ266V6G36394NNXAYEVABZ
+total_desires: 2

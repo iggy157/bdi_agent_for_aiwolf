@@ -1,0 +1,14 @@
+agent_name: kanolab2
+desires:
+- day: 0
+  desire: 私は占い師COを促し、村人たちに早期の情報を提供したい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-12T19:16:46.334811'
+- day: 0
+  desire: 私は占い師のCOを促し、村人たちに早期の情報を提供したい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-12T19:17:29.960674'
+game_id: 01JZZ266V6G36394NNXAYEVABZ
+total_desires: 2

@@ -1,0 +1,19 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私は占い師COを促し、早期に情報を得ることで村側の推理を有利に進めたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-12T19:20:00.789494'
+- day: 0
+  desire: 私は占い師が早期にCOするよう促し、村側の情報を充実させたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-12T19:20:52.399697'
+- day: 0
+  desire: 私は占い師COを促し、早期に村側の情報を集めて議論を有利に進めたい。
+  phase: null
+  request_count: 3
+  timestamp: '2025-07-12T19:21:53.380013'
+game_id: 01JZZ2C11Y2XEBRCZD0TW8FGG1
+total_desires: 3
