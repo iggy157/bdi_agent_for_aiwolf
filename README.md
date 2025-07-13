@@ -26,7 +26,7 @@ pip install -e .
 事前に[サーバー](https://github.com/aiwolfdial/aiwolf-nlp-server)で5人または13人用のサーバーを立ち上げます。
 サーバーを立ち上げたのち、python src/main.pyによって人狼ゲームの自己対戦を実行できます。
 
-その他の詳細情報については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
+実行方法の詳細やその他の情報については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
 
 
 # aiwolf-nlp-server
