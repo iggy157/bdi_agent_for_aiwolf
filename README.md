@@ -19,7 +19,7 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-## その他
+## 実行方法・その他
 
 /config/.envにgoogleかopenaiのapiキーを設定します。
 /config/config.yml/llmにどちらのapiを使うのか、sleep timeはどれくらいに設定するのかを記述します。(推奨sleep time:googleのとき3, openaiのとき0)
