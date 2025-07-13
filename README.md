@@ -10,8 +10,8 @@
 > Python 3.11以上が必要です。
 
 ```bash
-git clone https://github.com/aiwolfdial/aiwolf-nlp-agent-llm.git
-cd aiwolf-nlp-agent-llm
+git clone https://github.com/iggy157/bdi_agent_for_aiwolf.git
+cd bdi_agent_for_aiwolf
 cp config/config.yml.example config/config.yml
 cp config/.env.example config/.env
 python -m venv .venv
@@ -21,7 +21,12 @@ pip install -e .
 
 ## その他
 
-実行方法や設定などその他については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
+/config/.envにgoogleかopenaiのapiキーを設定します。
+/config/config.yml/llmにどちらのapiを使うのか、sleep timeはどれくらいに設定するのかを記述します。(推奨sleep time:googleのとき3, openaiのとき0)
+事前に[サーバー](https://github.com/aiwolfdial/aiwolf-nlp-server)で5人または13人用のサーバーを立ち上げます。
+サーバーを立ち上げたのち、python src/main.pyによって人狼ゲームの自己対戦を実行できます。
+
+その他の詳細情報については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
 
 
 # aiwolf-nlp-server
