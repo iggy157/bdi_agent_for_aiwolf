@@ -7,7 +7,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import ulid
 from ulid import ULID
 
 if TYPE_CHECKING:
@@ -38,13 +37,13 @@ class AgentLogger:
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
         if bool(self.config["log"]["file_output"]):
-            ulid_obj: ULID = ulid.parse(game_id)
+            ulid_obj: ULID = ULID.parse(game_id)
             tz = datetime.now(UTC).astimezone().tzinfo
             output_dir = (
                 Path(
                     str(self.config["log"]["output_dir"]),
                 )
-                / datetime.fromtimestamp(ulid_obj.timestamp().float / 1000, tz=tz).strftime(
+                / datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
                     "%Y%m%d%H%M%S%f",
                 )[:-3]
             )

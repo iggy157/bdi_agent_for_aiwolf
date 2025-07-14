@@ -181,7 +181,7 @@ class DesireTracker:
             return "現在特に強い願望はありません。"
         
         # 優先度が最も高いルールを基にフォールバック
-        highest_priority = max(best_policy, key=lambda x: x.get("priority", 0))
+        highest_priority = min(best_policy, key=lambda x: x.get("priority", 0))
         then_action = highest_priority.get("then", "適切な行動を取りたい")
         
         return f"現在の状況に応じて{then_action[:50]}..."

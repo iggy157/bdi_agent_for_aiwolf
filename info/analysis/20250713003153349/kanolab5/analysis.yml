@@ -1,9 +1,0 @@
-# Request 2
-1:
-  content: 皆さん、今日はどんなことを話しましょうか？お互いのことをもっと知る良い機会ですね。何か気になることや質問があれば、お気軽にどうぞ。
-  type: question
-  from: シズエ
-  to: all
-  request_count: 2
-
-

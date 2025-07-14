@@ -418,13 +418,13 @@ class Agent:
             return None
         
         try:
-            import ulid
+            from ulid import ULID
             from datetime import UTC, datetime
             
             # ULIDからタイムスタンプを取得
-            ulid_obj = ulid.parse(self.info.game_id)
+            ulid_obj = ULID.parse(self.info.game_id)
             tz = datetime.now(UTC).astimezone().tzinfo
-            game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().float / 1000, tz=tz).strftime(
+            game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
                 "%Y%m%d%H%M%S%f",
             )[:-3]
             

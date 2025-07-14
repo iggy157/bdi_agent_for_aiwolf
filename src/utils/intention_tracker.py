@@ -8,7 +8,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
-import ulid
 from dotenv import load_dotenv
 from jinja2 import Template
 from langchain_core.messages import HumanMessage
@@ -48,9 +47,9 @@ class IntentionTracker:
     
     def _setup_output_directory(self) -> None:
         """出力ディレクトリの設定."""
-        ulid_obj: ULID = ulid.parse(self.game_id)
+        ulid_obj: ULID = ULID.parse(self.game_id)
         tz = datetime.now(UTC).astimezone().tzinfo
-        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().float / 1000, tz=tz).strftime(
+        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
             "%Y%m%d%H%M%S%f",
         )[:-3]
         

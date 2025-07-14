@@ -1,9 +1,0 @@
-agent_name: kanolab2
-desires:
-- day: 0
-  desire: 私は他の人狼と連携し、村人たちに混乱をもたらすために、彼らの発言をサポートしたい。また、自分が疑われ始めた場合には、冷静に他の村人に疑念を抱かせて、自分への疑いを逸らしたい。
-  phase: null
-  request_count: 1
-  timestamp: '2025-07-13T00:30:44.583415'
-game_id: 01JZZM51SR5CTGY16ZY4EYKAES
-total_desires: 1
