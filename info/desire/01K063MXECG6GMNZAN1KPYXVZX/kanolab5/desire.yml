@@ -1,0 +1,9 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を持たせる発言をし、議論を自分に有利に進めたい。また、人狼側を擁護することで、村側の疑念を逸らしながら自分の役割を全うしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-15T12:57:17.128581'
+game_id: 01K063MXECG6GMNZAN1KPYXVZX
+total_desires: 1

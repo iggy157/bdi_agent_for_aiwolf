@@ -1,0 +1,21 @@
+1:
+  agent    ダイスケ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ミサキ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ミナコ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    リン:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ヴィクトリア:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false

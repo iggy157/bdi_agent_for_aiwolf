@@ -1,0 +1,9 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私は、他のプレイヤーにCOを促し、情報を増やして村側の優位性を確保したい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-15T12:57:27.073530'
+game_id: 01K063MXECG6GMNZAN1KPYXVZX
+total_desires: 1
