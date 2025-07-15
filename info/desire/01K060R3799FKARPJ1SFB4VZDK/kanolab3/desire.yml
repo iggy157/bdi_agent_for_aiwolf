@@ -1,0 +1,9 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私は早期にCOを促し、村人たちの情報を増やして議論を有利に進めたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-15T12:06:17.127477'
+game_id: 01K060R3799FKARPJ1SFB4VZDK
+total_desires: 1
