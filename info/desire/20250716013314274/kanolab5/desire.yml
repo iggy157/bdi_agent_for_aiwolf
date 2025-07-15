@@ -1,0 +1,34 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分への疑いを逸らしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-16T01:33:34.842748'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分の立場を守りたい。また、人狼側の味方としてその正体を擁護し、村側の疑いを避けることを目指したい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-16T01:35:54.247511'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分が疑われない状態を維持したい。また、村側の議論を混乱させるために、怪しいCOについて疑問を投げかけたい。
+  phase: null
+  request_count: 3
+  timestamp: '2025-07-16T01:38:11.746546'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分への疑いを避けつつ議論を混乱させたい。
+  phase: null
+  request_count: 4
+  timestamp: '2025-07-16T01:40:56.090461'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分に疑いが向かないようにしたい。
+  phase: null
+  request_count: 5
+  timestamp: '2025-07-16T01:42:43.408669'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をして、自分の立場を強化したい。
+  phase: null
+  request_count: 6
+  timestamp: '2025-07-16T01:44:33.486481'
+game_id: 01K07EXSH2H6NYZC9CFBTV63RY
+total_desires: 6

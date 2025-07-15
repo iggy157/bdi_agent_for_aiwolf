@@ -69,6 +69,7 @@ class StatusTracker:
                     "self_co": None,
                     "seer_co": None,
                     "alive": True,
+                    "werewolf": None,
                 }
             
             # self_coの更新（新しい値があれば更新）
@@ -95,6 +96,24 @@ class StatusTracker:
             for agent_name, agent_status in self.current_status.items()
         }
     
+    def update_werewolf_status(self, agent_name: str, is_werewolf: bool) -> None:
+        """
+        特定のエージェントの人狼ステータスを更新
+        
+        Args:
+            agent_name: エージェント名
+            is_werewolf: 人狼かどうか（True/False）
+        """
+        # Python native boolに変換して保存
+        werewolf_bool = bool(is_werewolf)
+        
+        if agent_name in self.current_status:
+            self.current_status[agent_name]["werewolf"] = werewolf_bool
+            
+            # 現在のパケットインデックスの履歴も更新
+            if self.packet_idx in self.status_history and agent_name in self.status_history[self.packet_idx]:
+                self.status_history[self.packet_idx][agent_name]["werewolf"] = werewolf_bool
+    
     def save_status(self) -> None:
         """status.ymlファイルに保存."""
         # YAMLフォーマットに変換
@@ -106,9 +125,10 @@ class StatusTracker:
                 yaml_data[packet_idx][f"agent    {agent_name.split('Agent')[1] if 'Agent' in agent_name else agent_name}"] = {
                     "self_co": status["self_co"] or "null",
                     "seer_co": status["seer_co"] or "null",
-                    "alive": status["alive"],
+                    "alive": bool(status["alive"]),
+                    "werewolf": status["werewolf"] if status["werewolf"] is not None else "null",
                 }
         
         # YAMLファイルに書き込み
         with open(self.status_file, "w", encoding="utf-8") as f:
-            yaml.dump(yaml_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            yaml.dump(yaml_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False, default_style=None)

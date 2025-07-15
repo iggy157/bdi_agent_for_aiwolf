@@ -33,6 +33,7 @@ from utils.my_log_tracker import MyLogTracker
 from utils.policy_evaluator import PolicyEvaluator
 from utils.desire import DesireTracker
 from utils.talk_history_to_libsvm import TalkHistoryToLibsvmConverter
+from utils.werewolf_judgment import WerewolfJudgment
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -87,6 +88,9 @@ class Agent:
         
         # Libsvm conversion
         self.libsvm_converter = TalkHistoryToLibsvmConverter()
+        
+        # Werewolf judgment
+        self.werewolf_judgment = WerewolfJudgment(config)
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -149,6 +153,8 @@ class Agent:
             self.total_request_count = 0  # リセット
             # libsvmコンバーターもリセット
             self.libsvm_converter.reset_for_new_game()
+            # 人狼判定もリセット
+            self.werewolf_judgment.reset_for_new_game(self.info.game_id if self.info else "")
         else:
             # リクエストカウンターをインクリメント
             self.total_request_count += 1
@@ -366,6 +372,16 @@ class Agent:
                 )
             except Exception as libsvm_error:
                 self.agent_logger.logger.error(f"Failed to process talk history to libsvm: {libsvm_error}")
+            
+            # Check and perform werewolf judgment
+            try:
+                self.werewolf_judgment.check_and_judge(
+                    self.info,
+                    self.agent_name,
+                    self.status_tracker
+                )
+            except Exception as werewolf_error:
+                self.agent_logger.logger.error(f"Failed to perform werewolf judgment: {werewolf_error}")
             
         except Exception as e:
             self.agent_logger.logger.error(f"Failed to update status tracking: {e}")

@@ -1,0 +1,26 @@
+1:
+  agent    ダイスケ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+    werewolf: false
+  agent    ミドリ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+    werewolf: false
+  agent    ミナト:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+    werewolf: false
+  agent    リュウジ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+    werewolf: false
+  agent    ヴィクトリア:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+    werewolf: false
