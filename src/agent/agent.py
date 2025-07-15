@@ -243,6 +243,7 @@ class Agent:
         """昼開始リクエストに対する処理を行う."""
         self._send_message_to_llm(self.request)
 
+    @timeout
     def whisper(self) -> str:
         """囁きリクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request)
@@ -254,6 +255,7 @@ class Agent:
         
         return response or ""
 
+    @timeout
     def talk(self) -> str:
         """トークリクエストに対する応答を返す."""
         # ポリシー評価とdesire生成を実行
@@ -272,6 +274,7 @@ class Agent:
         """昼終了リクエストに対する処理を行う."""
         self._send_message_to_llm(self.request)
 
+    @timeout
     def divine(self) -> str:
         """占いリクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
@@ -284,6 +287,7 @@ class Agent:
         
         return response
 
+    @timeout
     def guard(self) -> str:
         """護衛リクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
@@ -296,6 +300,7 @@ class Agent:
         
         return response
 
+    @timeout
     def vote(self) -> str:
         """投票リクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
@@ -308,6 +313,7 @@ class Agent:
         
         return response
 
+    @timeout
     def attack(self) -> str:
         """襲撃リクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
