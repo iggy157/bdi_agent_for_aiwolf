@@ -1,0 +1,14 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は早期にCOを促し、村人たちの情報を増やして推理を進めたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-16T01:09:46.344516'
+- day: 0
+  desire: 私はそろそろCOを促して、村人たちの情報を増やし、推理を助けたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-16T01:11:17.491745'
+game_id: 01K07DJB63GHBP5DFA3J8C6H05
+total_desires: 2

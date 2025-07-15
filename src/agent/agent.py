@@ -147,6 +147,8 @@ class Agent:
             self.whisper_history: list[Talk] = []
             self.llm_message_history: list[BaseMessage] = []
             self.total_request_count = 0  # リセット
+            # libsvmコンバーターもリセット
+            self.libsvm_converter.reset_for_new_game()
         else:
             # リクエストカウンターをインクリメント
             self.total_request_count += 1

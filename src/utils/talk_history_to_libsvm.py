@@ -64,6 +64,8 @@ class TalkHistoryToLibsvmConverter:
         self.min_count = min_count
         self.epochs = epochs
         self.mecab = MeCab.Tagger("-Owakati") if MECAB_AVAILABLE else None
+        # 処理済みのトークを追跡するためのセット（ゲームID + idx）
+        self.processed_talks = set()
     
     def tokenize_japanese(self, text: str) -> List[str]:
         """
@@ -83,25 +85,36 @@ class TalkHistoryToLibsvmConverter:
         # Fallback: 文字列から日本語単語っぽい部分を切り出す
         return re.findall(r'[ぁ-んァ-ン一-龥a-zA-Z0-9]+', text)
     
-    def extract_talks_by_agent(self, talk_history: List[Talk], current_agent: str) -> Dict[str, List[str]]:
+    def extract_talks_by_agent(self, talk_history: List[Talk], current_agent: str, game_id: str) -> Dict[str, List[str]]:
         """
-        talk_historyから現在のエージェント以外のエージェントの発言を抽出
+        talk_historyから現在のエージェント以外のエージェントの発言を抽出（新しいトークのみ）
         
         Args:
             talk_history: トーク履歴のリスト
             current_agent: 現在のエージェント名
+            game_id: ゲームID
             
         Returns:
-            エージェント名をキーとし、発言のリストを値とする辞書
+            エージェント名をキーとし、発言のリストを値とする辞書（新しいトークのみ）
         """
         talks_by_agent = defaultdict(list)
         
         for talk in talk_history:
             # 現在のエージェント以外の発言のみを対象とする
             if talk.agent != current_agent:
-                talks_by_agent[talk.agent].append(talk.text)
+                # トークIDを作成（ゲームID + トークidx）
+                talk_id = f"{game_id}_{talk.idx}"
+                
+                # まだ処理していないトークのみを処理
+                if talk_id not in self.processed_talks:
+                    talks_by_agent[talk.agent].append(talk.text)
+                    self.processed_talks.add(talk_id)
         
         return dict(talks_by_agent)
+    
+    def reset_for_new_game(self):
+        """新しいゲームが始まるときに処理済みトークをリセット"""
+        self.processed_talks.clear()
     
     def train_word2vec(self, all_texts: List[str]) -> Optional[Word2Vec]:
         """
@@ -232,7 +245,7 @@ class TalkHistoryToLibsvmConverter:
         game_timestamp = self.get_game_timestamp(info)
         
         # 現在のエージェント以外の発言を抽出
-        talks_by_agent = self.extract_talks_by_agent(talk_history, current_agent)
+        talks_by_agent = self.extract_talks_by_agent(talk_history, current_agent, info.game_id)
         
         if not talks_by_agent:
             return

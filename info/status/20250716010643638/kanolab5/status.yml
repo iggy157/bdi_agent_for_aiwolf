@@ -1,0 +1,21 @@
+1:
+  agent    ジョージ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    セルヴァス:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ダイスケ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    メイ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ヴィクトリア:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
