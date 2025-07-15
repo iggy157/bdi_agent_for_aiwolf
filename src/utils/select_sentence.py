@@ -111,7 +111,12 @@ class SelectSentenceTracker:
             
             # エントリを順番にチェック
             for entry in request_entries:
+                from_value = entry.get('from', '')
                 to_value = entry.get('to', '')
+                
+                # from=自分のagent_name の場合はスキップ
+                if from_value == self.agent_name:
+                    continue
                 
                 # to=自分のagent_name の場合
                 if to_value == self.agent_name:
