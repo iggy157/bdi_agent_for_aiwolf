@@ -15,7 +15,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
-from ulid import ULID
+from ulid import ULID, parse as ulid_parse
 
 if TYPE_CHECKING:
     pass
@@ -47,9 +47,9 @@ class IntentionTracker:
     
     def _setup_output_directory(self) -> None:
         """出力ディレクトリの設定."""
-        ulid_obj: ULID = ULID.parse(self.game_id)
+        ulid_obj: ULID = ulid_parse(self.game_id)
         tz = datetime.now(UTC).astimezone().tzinfo
-        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
+        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().int / 1000, tz=tz).strftime(
             "%Y%m%d%H%M%S%f",
         )[:-3]
         

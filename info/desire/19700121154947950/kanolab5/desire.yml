@@ -1,0 +1,9 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私はそろそろ占い師や霊媒師のCOを促し、村側の情報を増やすことで議論を活性化させたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-15T22:59:28.811263'
+game_id: 01K0763PP8XQ8HD0WN3P0BW06T
+total_desires: 1

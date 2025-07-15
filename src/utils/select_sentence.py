@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import yaml
-from ulid import ULID
+from ulid import ULID, parse as ulid_parse
 
 if TYPE_CHECKING:
     pass
@@ -30,9 +30,9 @@ class SelectSentenceTracker:
     
     def _setup_output_directory(self) -> None:
         """出力ディレクトリの設定."""
-        ulid_obj: ULID = ULID.parse(self.game_id)
+        ulid_obj: ULID = ulid_parse(self.game_id)
         tz = datetime.now(UTC).astimezone().tzinfo
-        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
+        game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().int / 1000, tz=tz).strftime(
             "%Y%m%d%H%M%S%f",
         )[:-3]
         

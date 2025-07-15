@@ -1,0 +1,14 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分が村人として疑われない状況を維持したい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-16T00:38:03.537105'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をして、議論を混乱させたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-16T00:39:05.542343'
+game_id: 01K07BRMB7FT3BM2QWWNPJR94R
+total_desires: 2

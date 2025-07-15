@@ -32,6 +32,7 @@ from utils.analysis_tracker import AnalysisTracker
 from utils.my_log_tracker import MyLogTracker
 from utils.policy_evaluator import PolicyEvaluator
 from utils.desire import DesireTracker
+from utils.talk_history_to_libsvm import TalkHistoryToLibsvmConverter
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -83,6 +84,9 @@ class Agent:
         self.policy_evaluator = PolicyEvaluator()
         self.desire_tracker = DesireTracker(config)
         self.game_id = game_id
+        
+        # Libsvm conversion
+        self.libsvm_converter = TalkHistoryToLibsvmConverter()
 
         load_dotenv(Path(__file__).parent.joinpath("./../../config/.env"))
 
@@ -350,6 +354,17 @@ class Agent:
             
             # Save my_log after each update
             self.my_log_tracker.save_my_log()
+            
+            # Process talk history to libsvm format
+            try:
+                self.libsvm_converter.process_talk_history(
+                    self.talk_history, 
+                    self.agent_name, 
+                    self.info
+                )
+            except Exception as libsvm_error:
+                self.agent_logger.logger.error(f"Failed to process talk history to libsvm: {libsvm_error}")
+            
         except Exception as e:
             self.agent_logger.logger.error(f"Failed to update status tracking: {e}")
 
@@ -418,13 +433,13 @@ class Agent:
             return None
         
         try:
-            from ulid import ULID
+            from ulid import ULID, parse as ulid_parse
             from datetime import UTC, datetime
             
             # ULIDからタイムスタンプを取得
-            ulid_obj = ULID.parse(self.info.game_id)
+            ulid_obj = ulid_parse(self.info.game_id)
             tz = datetime.now(UTC).astimezone().tzinfo
-            game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime(
+            game_timestamp = datetime.fromtimestamp(ulid_obj.timestamp().int / 1000, tz=tz).strftime(
                 "%Y%m%d%H%M%S%f",
             )[:-3]
             

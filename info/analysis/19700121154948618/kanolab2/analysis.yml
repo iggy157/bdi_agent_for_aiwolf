@@ -1,0 +1,16 @@
+# Request 2
+1:
+  content: 皆さん、今日の議論を始めましょう。誰か気になる人物や話したいことがあれば教えてください。
+  type: question
+  from: ダイスケ
+  to: all
+  request_count: 2
+
+2:
+  content: ジョナサンです。私としては、まずは皆さんの意見を聞きたいです。特に気になる人物や疑問があれば、ぜひ教えてください。みんなで話し合って、少しでも真実を明らかにできればと思います。
+  type: null
+  from: ジョナサン
+  to: all
+  request_count: 2
+
+
