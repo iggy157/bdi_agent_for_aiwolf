@@ -1,0 +1,21 @@
+1:
+  agent    セルヴァス:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ミヅキ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ミナト:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    リュウジ:
+    self_co: 'null'
+    seer_co: 'null'
+    alive: false
+  agent    ヴィクトリア:
+    self_co: 村人
+    seer_co: 'null'
+    alive: false

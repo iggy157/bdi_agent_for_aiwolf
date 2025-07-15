@@ -1,6 +1,6 @@
 import os
 import yaml
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,7 +10,15 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
+from ulid import ULID
 
+def get_game_timestamp(game_id: str) -> str:
+    """
+    ULIDからタイムスタンプ文字列 (例: 20240715123045123) を取得する。
+    """
+    ulid_obj: ULID = ULID.parse(game_id)
+    tz = datetime.now(UTC).astimezone().tzinfo
+    return datetime.fromtimestamp(ulid_obj.timestamp / 1000, tz=tz).strftime("%Y%m%d%H%M%S%f")[:-3]
 
 class DesireTracker:
     """
@@ -197,8 +205,11 @@ class DesireTracker:
             agent_name: エージェント名
             info: ゲーム情報
         """
-        # 保存先ディレクトリを作成
-        save_dir = self.base_path / game_id / agent_name
+        # game_timestampを取得（ここが修正ポイント！）
+        game_timestamp = get_game_timestamp(game_id)
+        
+        # 保存先ディレクトリを game_timestamp に変更
+        save_dir = self.base_path / game_timestamp / agent_name
         save_dir.mkdir(parents=True, exist_ok=True)
         
         # desire.ymlファイルのパス

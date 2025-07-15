@@ -1,0 +1,23 @@
+# Request 2
+1:
+  content: この村にはまだ誰もいないようです。まずは自己紹介から始めましょうか。皆さん、自己紹介をお願いします！
+  type: null
+  from: タクミ
+  to: all
+  request_count: 2
+
+2:
+  content: 私はメイです。24歳のSEERです。皆さんと一緒にこのゲームを楽しむことを楽しみにしています！あなたたちの自己紹介も聞かせてください。
+  type: co
+  from: メイ
+  to: all
+  request_count: 2
+
+3:
+  content: 私はヴィクトリアです。37歳のVILLAGERです。この村での役割を果たすために、みんなと協力していきたいと思っています。よろしくお願いします。
+  type: co
+  from: ヴィクトリア
+  to: all
+  request_count: 2
+
+

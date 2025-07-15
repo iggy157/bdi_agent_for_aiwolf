@@ -62,7 +62,7 @@ class IntentionTracker:
         self.game_timestamp = game_timestamp
         self.analysis_file = Path("info") / "analysis" / game_timestamp / self.agent_name / "analysis.yml"
         self.select_sentence_file = Path("info") / "select_sentence" / game_timestamp / self.agent_name / "select_sentence.yml"
-        self.desire_file = Path("info") / "desire" / self.game_id / self.agent_name / "desire.yml"
+        self.desire_file = Path("info") / "desire" / game_timestamp / self.agent_name / "desire.yml"
         self.status_file = Path("info") / "status" / game_timestamp / self.agent_name / "status.yml"
         self.my_log_file = Path("info") / "my_log" / game_timestamp / self.agent_name / "my_log.yml"
 

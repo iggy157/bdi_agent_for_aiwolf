@@ -1,0 +1,9 @@
+agent_name: kanolab5
+desires:
+- day: 0
+  desire: 私は他の人狼と連携し、村人たちに疑念を抱かせる発言を通じて混乱を引き起こしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-15T22:02:40.130556'
+game_id: 01K072VGTTBNF7WQZ6M0RACT00
+total_desires: 1
