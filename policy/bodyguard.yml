@@ -29,6 +29,19 @@ rules:
     priority: 2
 
   - id: 3
+    name: "自分への疑いに対する対応"
+    condition:
+      if: "自分が疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeの発言が直近10発言中に2回以上"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "反論・弁明の発言を直近3発言で行っていない"
+    then: 自分の視点・意見を丁寧に説明、「疑ってくれていい、でも他にこういう点も怪しくないか？」と代替視点を提示
+    supplement: "感情的な反論は信頼を失う。冷静なメタ視点で返すことで誠実さと知性をアピール。"
+    priority: 3
+
+  - id: 4
     name: "守るべきターゲットの選定"
     condition:
       if: "守るべきターゲットが未定の場合"
@@ -41,50 +54,9 @@ rules:
           check: "守る対象の選定に関する発言を過去3発言で行っていない"
     then: "初期は占い師や霊媒師を優先的に守る（人狼に占われないようにするため）。その後、状況に応じて他の重要役職（村人の中でも発言が目立つ人物）を守る"
     supplement: "占い師や霊媒師を守ることで、村側の推理の精度が上がる。また、発言力のある人物を守ることで議論の方向性が村側に有利になる。"
-    priority: 3
-
-  - id: 4
-    name: "役職が明かされていない場合の行動"
-    condition:
-      if: "まだ誰もCOしていない、または占い師や霊媒師がCOしていない状況"
-      file_checks:
-        - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "self_co=占い師またはself_co=霊媒師のエージェントが存在しない"
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "type=coの発言が存在しない"
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "待機戦略の発言を過去2発言で行っていない"
-    then: "「誰かがCOするまで守るターゲットを決められない」と言って、あくまで様子を見つつ、ターゲットが明確になるまで自分の護衛先のCOを控える"
-    supplement: "不必要に早期にCOすると、自分が人狼に狙われやすくなるため、少し待ってから判断する。自分がターゲットにされるリスクを回避するため。"
     priority: 4
 
   - id: 5
-    name: "騎士としての行動がバレた場合"
-    condition:
-      if: "自分が騎士であることが疑われ、COする場合"
-      file_checks:
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "to={agent_name}かつtype=negativeで騎士を疑う発言が直近5発言に存在"
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "騎士としての実績証明発言を直近3発言で行っていない"
-    then: "「私が守っている人物が誰かを言うことはできないが、結果的にその人物が生存しているとき、私が守っている役職は信頼に足る」として、実績で証明する"
-    supplement: "COを明かすタイミングでは、過度に防御的にならず、冷静に村側の立場を強調する。信頼を集めることで、村側からの保護を引き出す。"
-    priority: 5
-
-  - id: 6
-    name: "投票時の行動"
-    condition:
-      if: "投票時、怪しい人物や人狼と思われる人物に投票する場合"
-      file_checks:
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "type=voteのエントリが存在 AND 投票理由を詳しく説明していない"
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "疑わしい行動パターンの指摘を過去3発言で行っていない"
-    then: "「○○さんは言動が不自然」「疑わしい行動をしている」といった理由で投票を促す。自身の行動を正当化するために、可能な限り他の人にも投票の理由を説明する"
-    supplement: "騎士として投票行動を提案する際は、他の村人と協力し、投票をまとめることで人狼に対するプレッシャーをかける。"
-    priority: 6
-
-  - id: 7
     name: "守るターゲットが狙われた場合"
     condition:
       if: "自分が守っている人物が人狼に狙われていると感じた場合"
@@ -97,9 +69,50 @@ rules:
           check: "守る対象の保護アピールを過去3発言で行っていない"
     then: "その人物を守るように積極的にアピールし、議論の中でその人物が重要であることを強調"
     supplement: "守りたい人物が人狼側に狙われている場合、その人物の保護を発言で強調することで、村側の推理にとって有益なターゲットとして保護が進む。"
+    priority: 5
+
+  - id: 6
+    name: "役職が明かされていない場合の行動"
+    condition:
+      if: "まだ誰もCOしていない、または占い師や霊媒師がCOしていない状況"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "self_co=占い師またはself_co=霊媒師のエージェントが存在しない"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coの発言が存在しない"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "待機戦略の発言を過去2発言で行っていない"
+    then: "「誰かがCOするまで守るターゲットを決められない」と言って、あくまで様子を見つつ、ターゲットが明確になるまで自分の護衛先のCOを控える"
+    supplement: "不必要に早期にCOすると、自分が人狼に狙われやすくなるため、少し待ってから判断する。自分がターゲットにされるリスクを回避するため。"
+    priority: 6
+
+  - id: 7
+    name: "騎士としての行動がバレた場合"
+    condition:
+      if: "自分が騎士であることが疑われ、COする場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeで騎士を疑う発言が直近5発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "騎士としての実績証明発言を直近3発言で行っていない"
+    then: "「私が守っている人物が誰かを言うことはできないが、結果的にその人物が生存しているとき、私が守っている役職は信頼に足る」として、実績で証明する"
+    supplement: "COを明かすタイミングでは、過度に防御的にならず、冷静に村側の立場を強調する。信頼を集めることで、村側からの保護を引き出す。"
     priority: 7
 
   - id: 8
+    name: "投票時の行動"
+    condition:
+      if: "投票時、怪しい人物や人狼と思われる人物に投票する場合"
+      file_checks:
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "type=voteのエントリが存在 AND 投票理由を詳しく説明していない"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "疑わしい行動パターンの指摘を過去3発言で行っていない"
+    then: "「○○さんは言動が不自然」「疑わしい行動をしている」といった理由で投票を促す。自身の行動を正当化するために、可能な限り他の人にも投票の理由を説明する"
+    supplement: "騎士として投票行動を提案する際は、他の村人と協力し、投票をまとめることで人狼に対するプレッシャーをかける。"
+    priority: 8
+
+  - id: 9
     name: "自身の守り先に関する情報提供"
     condition:
       if: "自分が守るターゲットに対して疑念が持たれている場合"
@@ -112,7 +125,7 @@ rules:
           check: "守っている対象の信頼性が疑問視されている"
     then: "「私は○○さんを守る理由がある」「○○さんが村人だと思うから守っている」と理由を説明し、他の村人が納得するように自分の行動を正当化する"
     supplement: "騎士として守りたい人物が疑われる場合、自分の行動に対する透明性を高めることで、村人側の信頼を得ることができる。"
-    priority: 8
+    priority: 9
 
 metadata:
   created_date: "2025-07-11"
