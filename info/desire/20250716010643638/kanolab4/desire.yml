@@ -1,9 +1,0 @@
-agent_name: kanolab4
-desires:
-- day: 0
-  desire: 私はそろそろCOすべきだと発言し、村側の情報を増やして推理を有利に進めたい。
-  phase: null
-  request_count: 1
-  timestamp: '2025-07-16T01:07:00.105374'
-game_id: 01K07DD85PRDEYFQPTXRP086HD
-total_desires: 1

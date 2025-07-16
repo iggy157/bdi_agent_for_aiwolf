@@ -1,9 +1,0 @@
-agent_name: kanolab5
-desires:
-- day: 0
-  desire: 私は他の村人に疑念を抱かせる発言をして、議論を自分に有利に導きたい。
-  phase: null
-  request_count: 1
-  timestamp: '2025-07-15T23:10:23.689762'
-game_id: 01K076R362W9FM3YR11VVTWSAM
-total_desires: 1

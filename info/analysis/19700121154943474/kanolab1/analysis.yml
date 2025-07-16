@@ -1,9 +1,0 @@
-# Request 2
-1:
-  content: この村にはまだ誰もいないようです。まずは自己紹介から始めましょうか。皆さん、自己紹介をお願いします！
-  type: null
-  from: タクミ
-  to: all
-  request_count: 2
-
-

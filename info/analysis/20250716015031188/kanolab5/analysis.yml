@@ -1,9 +1,0 @@
-# Request 2
-1:
-  content: 皆さん、昼の間に情報を共有しましょう。誰が怪しいと思いますか？それぞれの考えを聞かせてください。
-  type: question
-  from: ダイスケ
-  to: all
-  request_count: 2
-
-

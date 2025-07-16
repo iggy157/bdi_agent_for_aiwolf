@@ -1,9 +1,0 @@
-agent_name: kanolab5
-desires:
-- day: 0
-  desire: 私はそろそろCOすべきではないかと発言し、村人たちの情報を増やしたい。
-  phase: null
-  request_count: 1
-  timestamp: '2025-07-15T22:31:14.501037'
-game_id: 01K074G660WZJVE398CWEABNG1
-total_desires: 1

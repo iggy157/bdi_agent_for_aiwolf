@@ -1,9 +1,0 @@
-# Request 2
-1:
-  content: 皆さん、今日の議論を始めましょう。誰か気になる人物や話したいことがあれば教えてください。
-  type: question
-  from: ダイスケ
-  to: all
-  request_count: 2
-
-
