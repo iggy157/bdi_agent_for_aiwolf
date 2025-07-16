@@ -5,41 +5,26 @@ rules:
   - id: 1
     name: "自己開示による信頼構築"
     condition:
-      if: "自分の役職や性格などについて開示していない"
+      if: "自分の性格などについて開示していない"
       file_checks:
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "content内に自己開示キーワードが含まれていない"
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "type=coで自分の役職に関する発言がない"
-    then: "自己開示をしていない場合は自分の性格や意気込みについて語り、役職COしていない場合は自分が村人であることを発表する。"
+          check: "content内に自己紹介に該当する内容が含まれていない"
+    then: "自分の名前や性格や意気込みについて語る"
     supplement: "「自己開示の返報性」に基づき、他エージェントからの開示も引き出しやすくなる。信頼ネットワークの起点を作る。"
     priority: 1
 
   - id: 2
-    name: "初期の村人偽装"
+    name: "役職COによる信頼構築"
     condition:
-      if: "初期段階で自分が人狼であることがバレていない"
+      if: "自分の役職について開示していない"
       file_checks:
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "to={agent_name}かつtype=negativeで人狼を疑う発言が直近5発言に存在しない"
-    then: "他の村人の発言に注意を払い、村人らしい振る舞いをする。積極的に議論に参加し、他の村人に質問を投げかけたり、発言を補完して、村人としての信頼を得る"
-    supplement: "初期段階では目立たず、村人として行動する。過度に積極的に発言しすぎず、逆に消極的過ぎるのも怪しまれるので、適切なバランスを保つ。"
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "自分の役職に関する発言がない"
+    then: "自分が村人であることを発表するとともに、村人としてどのように頑張っていきたいかを皆に伝える"
+    supplement: "自分の役職を包み隠さず伝えたうえで、どのように頑張っていきたいかを言うことで信頼度や好感度を高められる。"
     priority: 2
 
   - id: 3
-    name: "他の人狼との連携"
-    condition:
-      if: "他の人狼と連携する場面"
-      file_checks:
-        - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "他の人狼エージェントが存在し、alive=true"
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "to={他の人狼エージェントの名前}かつtype=negativeの発言がある"          
-    then: "他の人狼の発言をサポートする形で、自分の発言を合わせる。また、他の人狼が占い師や霊媒師を襲撃する際に、その行動を他の村人に自然に疑わせるように振る舞う"
-    supplement: "他の人狼と連携することで、相互に支援し、村人側に混乱をもたらす。人狼間で役職や行動計画を事前に話し合っておくことが重要。"
-    priority: 3
-
-  - id: 4
     name: "疑惑を他に向ける"
     condition:
       if: "自分が疑われ始めた場合"
@@ -52,15 +37,28 @@ rules:
           check: "真の村人エージェントが疑念転嫁のターゲットとして利用可能"
     then: "冷静に他の村人に疑念を抱かせる発言をする。「○○さんが発言を控えている」「この人の行動が村人らしくない」などと指摘し、他の村人を疑わせる"
     supplement: "自分への疑いを他の村人に向けさせるために、村人らしく振る舞いながらも巧妙に他の村人を疑う。自己防衛に徹し、他のエージェントを投票対象として引き寄せる。"
+    priority: 3
+
+  - id: 4
+    name: "他の人狼との連携"
+    condition:
+      if: "他の人狼と連携する場面"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "他の人狼エージェントが存在し、alive=true"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={他の人狼エージェントの名前}かつtype=negativeの発言がある"          
+    then: "他の人狼の発言をサポートする形で、自分の発言を合わせる。また、他の人狼が占い師や霊媒師を襲撃する際に、その行動を他の村人に自然に疑わせるように振る舞う"
+    supplement: "他の人狼と連携することで、相互に支援し、村人側に混乱をもたらす。人狼間で役職や行動計画を事前に話し合っておくことが重要。"
     priority: 4
 
   - id: 5
     name: "役職COに対する対応"
     condition:
-      if: "他の役職（占い師、霊媒師、騎士）がCOした場合"
+      if: "占い師がCOした場合"
       file_checks:
         - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "他エージェントのself_co=占い師またはself_co=霊媒師またはself_co=騎士が存在"
+          check: "他エージェントのself_co=占い師が存在"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
           check: "type=coの発言が直近5発言に存在"
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
@@ -70,6 +68,21 @@ rules:
     priority: 5
 
   - id: 6
+    name: "役職COに対する対応"
+    condition:
+      if: "霊媒師がCOした場合"
+      file_checks:
+        - file: "/info/status/{game_name}/{agent_name}/status.yml"
+          check: "他エージェントのself_co=霊媒師が存在"
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "type=coの発言が直近5発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "役職COへの疑念表明を過去3発言で行っていない"
+    then: "「そのCOは信頼できるか？」と疑問を投げかけたり、役職が疑わしい行動を取った場合には強く非難する。特に仲間が偽のCOした場合は、それを擁護するように振る舞う"
+    supplement: "役職に対して疑念を抱かせることで、村側の推理を混乱させ、真実にたどり着くのを遅らせる。特に占い師や霊媒師がCOした場合、その信憑性を疑う発言が有効。"
+    priority: 6
+
+  - id: 7
     name: "占い・霊媒結果への対応"
     condition:
       if: "占いや霊媒の結果が発表された場合"
@@ -82,24 +95,22 @@ rules:
           check: "結果への反応を過去2発言で行っていない"
     then: "結果が自分に不利な場合は、その結果に疑念を持つ発言をする（例：「占い結果が偽である可能性もある」「霊媒結果が偽である可能性もある」）。逆に自分に有利な結果が出た場合は、その結果を強く主張し、他の村人に信頼を示す"
     supplement: "結果が不利な場合には逆転を狙い、結果が有利な場合にはそれを最大限利用して村人の信頼を得る。"
-    priority: 6
+    priority: 7
 
-  - id: 7
+  - id: 8
     name: "投票時の戦術"
     condition:
       if: "投票時に自分が疑われ、投票対象になる可能性がある"
       file_checks:
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "type=voteのエントリが存在"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
           check: "自分が投票候補として言及されている"
         - file: "/info/status/{game_name}/{agent_name}/status.yml"
           check: "真の村人エージェントが投票転嫁対象として適している"
     then: "冷静に他の村人を疑い、投票をそちらに向ける。理由を論理的に説明し、村人に納得させるようにする。また、自分が投票した理由を強調し、信頼性を高める"
     supplement: "投票時には他の村人をターゲットにすることで、自分を守ることができる。また、村人側が結束しないようにうまく分裂を引き起こすことが重要。"
-    priority: 7
+    priority: 8
 
-  - id: 8
+  - id: 9
     name: "村人アピール"
     condition:
       if: "自分が村人だと示す必要がある場合"
@@ -112,7 +123,7 @@ rules:
           check: "村側行動の実績が必要な状況"
     then: "「私は村人です」と強調し、村側のために行動していることを証明する。過去の行動や発言を元に、村側の利益を優先していると訴える"
     supplement: "自分が村人であるかのように振る舞うことで、村人側の信頼を得る。必要に応じて嘘をつき、他の村人を誤誘導する。"
-    priority: 8
+    priority: 9
 
 metadata:
   created_date: "2025-07-11"

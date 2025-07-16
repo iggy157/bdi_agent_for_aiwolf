@@ -5,13 +5,11 @@ rules:
   - id: 1
     name: "自己開示による信頼構築"
     condition:
-      if: "自分の役職や性格などについて開示していない"
+      if: "自分の性格などについて開示していない"
       file_checks:
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "content内に自己開示キーワードが含まれていない"
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "type=coで自分の役職に関する発言がない"
-    then: "自己開示をしていない場合は自分の性格や意気込みについて語り、役職COしていない場合は自分が占い師であることを発表する。"
+          check: "content内に自己紹介に該当する内容が含まれていない"
+    then: "自分の名前や性格や意気込みについて語る"
     supplement: "「自己開示の返報性」に基づき、他エージェントからの開示も引き出しやすくなる。信頼ネットワークの起点を作る。"
     priority: 1
 
