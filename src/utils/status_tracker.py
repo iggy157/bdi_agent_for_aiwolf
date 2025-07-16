@@ -30,7 +30,7 @@ class StatusTracker:
         self.packet_idx = 0
         
         # 状態履歴を保存する辞書
-        # {packet_idx: {agent_name: {"self_co": ..., "seer_co": ..., "alive": ...}}}
+        # {packet_idx: {agent_name: {"self_co": ..., "seer_co": ...}}}
         self.status_history: dict[int, dict[str, dict[str, Any]]] = {}
         
         # 現在の状態を保存する辞書
@@ -68,7 +68,6 @@ class StatusTracker:
                 self.current_status[agent_name] = {
                     "self_co": None,
                     "seer_co": None,
-                    "alive": True,
                     "werewolf": None,
                 }
             
@@ -87,8 +86,6 @@ class StatusTracker:
                     # カンマ区切りで追加
                     self.current_status[agent_name]["seer_co"] = f"{current_seer_co},{new_seer_co}"
             
-            # 生存状態の更新
-            self.current_status[agent_name]["alive"] = str(status) == "ALIVE"
         
         # 現在の状態を履歴に保存
         self.status_history[self.packet_idx] = {
@@ -125,7 +122,6 @@ class StatusTracker:
                 yaml_data[packet_idx][f"agent    {agent_name.split('Agent')[1] if 'Agent' in agent_name else agent_name}"] = {
                     "self_co": status["self_co"] or "null",
                     "seer_co": status["seer_co"] or "null",
-                    "alive": bool(status["alive"]),
                     "werewolf": status["werewolf"] if status["werewolf"] is not None else "null",
                 }
         
