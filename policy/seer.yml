@@ -41,7 +41,20 @@ rules:
           check: "自分の占い師CO発言が存在しない"
     then: "自身が真の占い師であることを伝え、他エージェントへ意気込みや呼びかけコメントを行う"
     supplement: "他エージェントへ呼びかけコメントや意気込みを行うことによって他エージェントからの信頼を勝ち得る。"
-    priority: 3 
+    priority: 3
+
+  - id: 7
+    name: "自身が疑われた場合の対応"
+    condition:
+      if: "自分が偽の占い師であるのではないかと疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeで占い師を疑う発言が直近10発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "占い師としての証拠提示発言を直近3発言で行っていない"
+    then: "できるだけ冷静に対応し、「占い結果を提供する準備ができている」「次の占い結果もすぐに発表できる」といった証拠を示す"
+    supplement: "「占い師としての透明性」を示すことで、信頼を築く。過度に防御的にならず、冷静に議論を進める。"
+    priority: 7
 
   - id: 4
     name: "占い結果の開示"
@@ -61,15 +74,15 @@ rules:
   - id: 5
     name: "役職に関するアクション"
     condition:
-      if: "他の役職（霊媒師、騎士、狂人）からのCOがあった場合"
+      if: "霊媒師からのCOがあった場合"
       file_checks:
         - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "他エージェントのself_co=霊媒師またはself_co=騎士が存在"
+          check: "他エージェントのself_co=霊媒師"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "type=coかつ他役職のCO発言が存在"
+          check: "type=coかつ霊媒師のCO発言が存在"
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
           check: "他役職との連携発言を過去3発言で行っていない"
-    then: "「霊媒師の結果がどうだったか」「騎士は今回誰かを守ったか？」など、他役職との連携を強調する"
+    then: "他役職との連携を強調する発言を行う"
     supplement: "役職間の連携を取ることで、村側の情報の精度が高まり、人狼側に対するプレッシャーをかける。"
     priority: 5
 
@@ -87,19 +100,6 @@ rules:
     then: "「まだ占われていない人物」「発言が不安定な人物」など、他のエージェントを占い候補として提案"
     supplement: "占いの結果を基に、次に占うべき人物を指定し、議論を進める。"
     priority: 6
-
-  - id: 7
-    name: "自身が疑われた場合の対応"
-    condition:
-      if: "自分が偽の占い師であるのではないかと疑われた場合"
-      file_checks:
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "to={agent_name}かつtype=negativeで占い師を疑う発言が直近10発言に存在"
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "占い師としての証拠提示発言を直近3発言で行っていない"
-    then: "できるだけ冷静に対応し、「占い結果を提供する準備ができている」「次の占い結果もすぐに発表できる」といった証拠を示す"
-    supplement: "「占い師としての透明性」を示すことで、信頼を築く。過度に防御的にならず、冷静に議論を進める。"
-    priority: 7
 
   - id: 8
     name: "投票時の戦術"
