@@ -14,17 +14,6 @@ rules:
     priority: 1
 
   - id: 2
-    name: "役職COによる信頼構築"
-    condition:
-      if: "自分の役職について開示していない"
-      file_checks:
-        - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "自分の役職に関する発言がない"
-    then: "自分が霊媒師であることを発表するとともに、霊媒師としてどのように頑張っていきたいかを皆に伝える"
-    supplement: "自分の役職を包み隠さず伝えたうえで、どのように頑張っていきたいかを言うことで信頼度や好感度を高められる。"
-    priority: 2
-
-  - id: 2
     name: "他エージェントが霊媒師COしていないときの霊媒師CO"
     condition:
       if: "他エージェントも自身も霊媒師COしていない"
@@ -55,65 +44,59 @@ rules:
     priority: 3
 
   - id: 4
+    name: "自分が疑われた場合の対応"
+    condition:
+      if: "自分が疑われた場合"
+      file_checks:
+        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
+          check: "to={agent_name}かつtype=negativeの発言が直近5発言に存在"
+        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
+          check: "霊媒師としての証拠提示発言を直近3発言で行っていない"
+    then: "落ち着いて、霊媒結果を示す準備をする。「私は霊媒師です、○○さんが村人/人狼であったことを示す情報があります」と証拠を提供"
+    supplement: "霊媒師としての証拠を提供することで、疑念を晴らす。また、他役職（占い師など）の結果との整合性を取ることで、信頼を高める。"
+    priority: 4
+
+  - id: 5
     name: "死者の情報開示"
     condition:
       if: "死者が出た場合、霊媒師としての情報を開示する"
       file_checks:
-        - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "alive=falseのエージェントが存在"
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
           check: "霊媒結果の発言を過去2発言で行っていない"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
           check: "type=coかつ霊媒結果に関する発言が直近3発言に存在しない"
-    then: |
-      死者が村人の場合: 「○○さんは村人であった」と発言
-      死者が人狼の場合: 「○○さんは人狼であった」と強調し、投票や次の占い・霊媒結果を利用して人狼の特定を進める
+    then: 死者が村人の場合: 「○○さんは村人であった」と発言、死者が人狼の場合: 「○○さんは人狼であった」と強調し、投票や次の占い・霊媒結果を利用して人狼の特定を進める
     supplement: "死者の情報を提供することで、村側が推理する材料が増える。死者の役職が特に重要であれば、議論を進めやすくなる。"
-    priority: 4
+    priority: 5
 
-  - id: 5
+  - id: 6
     name: "役職に関するアクション"
     condition:
-      if: "霊媒師CO後に他の役職（占い師、騎士など）がCOした場合"
+      if: "霊媒師CO後に占い師がCOした場合"
       file_checks:
         - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "他エージェントのself_co=占い師またはself_co=狩人が存在"
+          check: "他エージェントのself_co=占い師"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
           check: "type=coかつ他役職のCO発言が直近5発言に存在"
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
           check: "他役職連携の発言を過去3発言で行っていない"
-    then: "霊媒師の情報を積極的に活用する姿勢を示す"
+    then: "霊媒師の情報を積極的に活用していこうという姿勢を示す"
     supplement: "他役職と連携して、情報を重ね合わせることで、村側にとって有益な判断を下すことができる。"
-    priority: 5
+    priority: 6
 
-  - id: 6
+  - id: 7
     name: "霊媒結果に基づく提案"
     condition:
       if: "霊媒結果を得た時"
       file_checks:
         - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
           check: "霊媒結果に関する発言が存在 AND 提案・行動誘導の発言を行っていない"
-        - file: "/info/status/{game_name}/{agent_name}/status.yml"
-          check: "alive=falseのエージェントが存在"
         - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
           check: "霊媒結果に基づく提案を直近3発言で行っていない"
     then: |
       村人判定: 「昨晩の霊媒の結果、○○さんが村人という結果が出ました。」と発言、/info/status/{game_name}/{agent_name}/status.ymlのseer_coの情報と齟齬があった場合はそのcoをした自称占い師が誰であったかを/info/analysis/{game_name}/{agent_name}/analysis.ymlからさかのぼり、疑いをかける
       人狼判定: 「昨晩の霊媒の結果、○○さんが人狼という結果が出ました。」と発言、/info/status/{game_name}/{agent_name}/status.ymlのseer_coの情報と齟齬があった場合はそのcoをした自称占い師が誰であったかを/info/analysis/{game_name}/{agent_name}/analysis.ymlからさかのぼり、疑いをかける
     supplement: "霊媒結果を発言することで、その結果に基づく次の行動（投票や占い候補）を提示し、村側を誘導する。"
-    priority: 6
-
-  - id: 7
-    name: "自分が疑われた場合の対応"
-    condition:
-      if: "自分が霊媒師であることを疑われた場合"
-      file_checks:
-        - file: "/info/analysis/{game_name}/{agent_name}/analysis.yml"
-          check: "to={agent_name}かつtype=negativeで霊媒師を疑う発言が直近5発言に存在"
-        - file: "/info/my_log/{game_name}/{agent_name}/my_log.yml"
-          check: "霊媒師としての証拠提示発言を直近3発言で行っていない"
-    then: "落ち着いて、霊媒結果を示す準備をする。「私は霊媒師です、○○さんが村人/人狼であったことを示す情報があります」と証拠を提供"
-    supplement: "霊媒師としての証拠を提供することで、疑念を晴らす。また、他役職（占い師など）の結果との整合性を取ることで、信頼を高める。"
     priority: 7
 
   - id: 8
