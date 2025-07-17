@@ -171,18 +171,17 @@ class WerewolfJudgment:
             return False
         
         try:
-            # 最新のデータ（最後の行）で判定
             if len(features) == 0:
                 return False
-            
-            latest_features = features[-1].reshape(1, -1)
-            prediction = self.model.predict(latest_features)[0]
-            
+
+            predictions = self.model.predict(features)
+
             # モデルの出力: 1=人狼, -1=その他
-            # Pythonのnative boolに変換（numpy scalar対応）
-            werewolf_prediction = bool(int(prediction) == 1)
+            # 複数行の中に1があれば人狼と判断
+            werewolf_prediction = any(int(p) == 1 for p in predictions)
+
             return werewolf_prediction
-            
+
         except Exception as e:
             print(f"Error in werewolf prediction: {e}")
             return False
