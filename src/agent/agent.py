@@ -170,12 +170,37 @@ class Agent:
             return []
         return [k for k, v in self.info.status_map.items() if v == Status.ALIVE]
 
+    def _clean_and_validate_agent_response(self, response: str | None) -> str:
+        """LLMレスポンスから有効なエージェント名を抽出する."""
+        if not response:
+            return random.choice(self.get_alive_agents()) if self.get_alive_agents() else ""
+        
+        # レスポンスをクリーンアップ
+        cleaned_response = response.strip()
+        
+        # 生存エージェントリストを取得
+        alive_agents = self.get_alive_agents()
+        if not alive_agents:
+            return ""
+        
+        # レスポンスが生存エージェントの名前と完全一致するかチェック
+        if cleaned_response in alive_agents:
+            return cleaned_response
+        
+        # レスポンス内に生存エージェントの名前が含まれているかチェック
+        for agent in alive_agents:
+            if agent in cleaned_response:
+                return agent
+        
+        # 有効なエージェント名が見つからない場合はランダムに選択
+        return random.choice(alive_agents)
+
     def _send_message_to_llm(self, request: Request | None) -> str | None:
         if request is None:
             return None
-        if request.lower() not in self.config["prompt"]:
+        if request.value.lower() not in self.config["prompt"]:
             return None
-        prompt = self.config["prompt"][request.lower()]
+        prompt = self.config["prompt"][request.value.lower()]
         if float(self.config["llm"]["sleep_time"]) > 0:
             sleep(float(self.config["llm"]["sleep_time"]))
         key = {
@@ -248,6 +273,7 @@ class Agent:
         """囁きリクエストに対する応答を返す."""
         response = self._send_message_to_llm(self.request)
         self.sent_whisper_count = len(self.whisper_history)
+        return response or ""
         
         # 発話内容を記録
         if response:
@@ -277,54 +303,30 @@ class Agent:
     @timeout
     def divine(self) -> str:
         """占いリクエストに対する応答を返す."""
-        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        return self._send_message_to_llm(self.request) or random.choice( # noqa: 5311
             self.get_alive_agents(),
         )
-        
-        # アクション内容を記録
-        if response:
-            self.my_log_tracker.log_action("divine", response, self.info)
-        
-        return response
 
     @timeout
     def guard(self) -> str:
         """護衛リクエストに対する応答を返す."""
-        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        return self._send_message_to_llm(self.request) or random.choice( # noqa: 5311
             self.get_alive_agents(),
         )
-        
-        # アクション内容を記録
-        if response:
-            self.my_log_tracker.log_action("guard", response, self.info)
-        
-        return response
 
     @timeout
     def vote(self) -> str:
         """投票リクエストに対する応答を返す."""
-        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
-        
-        # アクション内容を記録
-        if response:
-            self.my_log_tracker.log_action("vote", response, self.info)
-        
-        return response
 
     @timeout
     def attack(self) -> str:
         """襲撃リクエストに対する応答を返す."""
-        response = self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
+        return self._send_message_to_llm(self.request) or random.choice(  # noqa: S311
             self.get_alive_agents(),
         )
-        
-        # アクション内容を記録
-        if response:
-            self.my_log_tracker.log_action("attack", response, self.info)
-        
-        return response
 
     def finish(self) -> None:
         """ゲーム終了リクエストに対する処理を行う."""
@@ -336,6 +338,18 @@ class Agent:
         
         # Save my_log.yml when game finishes
         self.my_log_tracker.save_my_log()
+
+        # Save desire.yml when game finishes
+        self.desire.save_desire()
+
+        # Save select_sentence.yml when game finishes
+        self.select_sentence.save_select_sentence()
+
+        # Save intention.yml when game finishes
+        self.intention_tracker.save_intention()
+
+        # Save libsvm when game finishes
+        self.analysis_to_libsvm.save_libsvm()
     
     def _update_status_tracking(self) -> None:
         """ステータストラッキングを更新."""
