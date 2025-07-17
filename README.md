@@ -28,7 +28,7 @@ pip install -e .
 
 # bdi_agent_for_aiwolf/judgement_werewolf/libsvm
 
-[詳細はこちら] (/judgement_werewolf/libsvm/README.md)
+[詳細はこちら](/judgement_werewolf/libsvm/README.md)
 
 ```bash
 # 役職情報,発話内容の形式にログを整形
