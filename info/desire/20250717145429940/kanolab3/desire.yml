@@ -1,0 +1,44 @@
+agent_name: kanolab3
+desires:
+- day: 0
+  desire: 私は自分が疑われた場合に冷静に自己弁護し、他の人物に疑いを向けて自分の立場を守りたい。また、他の役職のCOに疑念を投げかけることで村側の推理を混乱させたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-17T14:55:14.136662'
+- day: 0
+  desire: 私は自分が疑われた際に冷静に自己弁護し、他の人物に疑いを向けることで自分の立場を守りたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-17T14:56:52.946666'
+- day: 0
+  desire: 私は自分が疑われた際に冷静に自己弁護し、他の人物に疑いを向けて自分の立場を守りたい。また、他の役職のCOに疑問を投げかけて議論を混乱させ、村側の推理を狂わせたい。
+  phase: null
+  request_count: 3
+  timestamp: '2025-07-17T14:58:15.935368'
+- day: 0
+  desire: 私は冷静に自分が村人であることを主張し、他の怪しい人物に疑いを向けて自分を守りたい。
+  phase: null
+  request_count: 4
+  timestamp: '2025-07-17T14:59:45.090625'
+- day: 1
+  desire: 私は冷静に自分が村人であることを主張し、他の怪しい人物に疑いを向けて、自分への疑念を避けたい。
+  phase: null
+  request_count: 5
+  timestamp: '2025-07-17T15:00:18.266437'
+- day: 1
+  desire: 私は冷静に自己弁護をし、過去の発言を根拠に自分を正当化したい。また、他の人物に疑いを向けることで自分への疑念を避けたい。
+  phase: null
+  request_count: 6
+  timestamp: '2025-07-17T15:02:13.976454'
+- day: 1
+  desire: 私は自分が疑われた場合に冷静に自己弁護し、他の人物に疑いを向けて自分を守りたい。また、他のエージェントの役職COに対して疑念を投げかけ、議論を混乱させることで村側の推理を狂わせたい。
+  phase: null
+  request_count: 7
+  timestamp: '2025-07-17T15:04:15.825062'
+- day: 1
+  desire: 私は冷静に自己弁護し、他の人物に疑いを向けることで、自分への疑念を避けたい。また、他の役職のCOに疑問を投げかけて、村側の推理を混乱させたい。
+  phase: null
+  request_count: 8
+  timestamp: '2025-07-17T15:06:03.664264'
+game_id: 01K0BF5NDM2EJSHZ6T2J70H1WZ
+total_desires: 8

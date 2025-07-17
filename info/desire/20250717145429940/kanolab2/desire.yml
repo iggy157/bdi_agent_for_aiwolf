@@ -1,0 +1,44 @@
+agent_name: kanolab2
+desires:
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いを逸らしたい。また、仲間の人狼と連携し、村人を混乱させる戦略を進めたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-17T14:54:36.770911'
+- day: 0
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いを逸らしたい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-17T14:55:33.773108'
+- day: 0
+  desire: 私は自分が疑われている状況を逆転させるために、他の村人に疑念を抱かせる発言をして、議論を誘導したい。
+  phase: null
+  request_count: 3
+  timestamp: '2025-07-17T14:57:11.075174'
+- day: 0
+  desire: 私は冷静に他の村人に疑念を抱かせ、私への疑いを逸らすための発言をしたい。
+  phase: null
+  request_count: 4
+  timestamp: '2025-07-17T14:58:32.047947'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いを逸らしたい。また、村人らしく振る舞いながら他の人狼と連携して混乱を引き起こしたい。
+  phase: null
+  request_count: 5
+  timestamp: '2025-07-17T15:00:37.111263'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いをそらしたい。
+  phase: null
+  request_count: 6
+  timestamp: '2025-07-17T15:02:41.831946'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いをそらしたい。
+  phase: null
+  request_count: 7
+  timestamp: '2025-07-17T15:04:43.072363'
+- day: 1
+  desire: 私は他の村人に疑念を抱かせる発言をし、自分への疑いをそらしたい。
+  phase: null
+  request_count: 8
+  timestamp: '2025-07-17T15:06:24.263873'
+game_id: 01K0BF5NDM2EJSHZ6T2J70H1WZ
+total_desires: 8

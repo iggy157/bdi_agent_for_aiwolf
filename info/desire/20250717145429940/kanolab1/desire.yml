@@ -1,0 +1,44 @@
+agent_name: kanolab1
+desires:
+- day: 0
+  desire: 私は占い師のCOを促し、村人たちがより多くの情報を得られるようにしたい。
+  phase: null
+  request_count: 1
+  timestamp: '2025-07-17T14:55:01.943354'
+- day: 0
+  desire: 私は占い師のCOを促し、村側に有利な情報を早期に得たい。
+  phase: null
+  request_count: 2
+  timestamp: '2025-07-17T14:56:28.690449'
+- day: 0
+  desire: 私は占い師のCOを促し、村側の情報を増やして議論を活性化させたい。
+  phase: null
+  request_count: 3
+  timestamp: '2025-07-17T14:58:00.476294'
+- day: 0
+  desire: 私は占い師のCOを促して村全体の情報を増やし、議論を活性化させたい。
+  phase: null
+  request_count: 4
+  timestamp: '2025-07-17T14:59:26.653522'
+- day: 1
+  desire: 私は占い師のCOを促し、村側に有利な情報を増やしたい。
+  phase: null
+  request_count: 5
+  timestamp: '2025-07-17T15:01:43.050956'
+- day: 1
+  desire: 私は占い師のCOを促して情報を増やし、村側の勝利に貢献したい。
+  phase: null
+  request_count: 6
+  timestamp: '2025-07-17T15:03:46.976304'
+- day: 1
+  desire: 私は占い師のCOを促し、村人たちが早期に情報を共有できるようにしたい。
+  phase: null
+  request_count: 7
+  timestamp: '2025-07-17T15:05:39.712927'
+- day: 1
+  desire: 私は占い師のCOを促し、村側に有利な情報を増やして議論を活性化させたい。
+  phase: null
+  request_count: 8
+  timestamp: '2025-07-17T15:07:11.757750'
+game_id: 01K0BF5NDM2EJSHZ6T2J70H1WZ
+total_desires: 8
