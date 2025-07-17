@@ -1,7 +1,5 @@
 # bdi_agent_for_aiwolf
 
-[README in English](/README.en.md)
-
 人狼知能コンテスト（自然言語部門） のLLMを用いたサンプルエージェントです。
 
 ## 環境構築
@@ -27,6 +25,19 @@ pip install -e .
 サーバーを立ち上げたのち、python src/main.pyによって人狼ゲームの自己対戦を実行できます。
 
 実行方法の詳細やその他の情報については[aiwolf-nlp-agent](https://github.com/aiwolfdial/aiwolf-nlp-agent)をご確認ください。
+
+# bdi_agent_for_aiwolf/judgement_werewolf/libsvm
+
+```bash
+# 役職情報,発話内容の形式にログを整形
+python /judgement_werewolf/libsvm/data/log_formatter_player_split.py
+# libsvm形式に変換
+python /judgement_werewolf/libsvm/word_embeding/run_all_embedings.py
+# 訓練
+python /judgement_werewolf/libsvm/word_embeding/train_werewolf_models.py
+```
+/judgement_werewolf/libsvm/models/にモデルや結果が保存されます。
+ベストモデル(/judgement_werewolf/libsvm/models/Word2Vec/best_model_word2vec.joblib)を呼び出して使用してください。
 
 
 # aiwolf-nlp-server
