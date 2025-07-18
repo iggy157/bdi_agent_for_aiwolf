@@ -1,145 +1,105 @@
-# ワードエンベディング処理スクリプト
+# 🧠 Werewolf LLM Judgment Pipeline - README
 
-人狼ゲームのテキストデータをワードエンベディングしてlibsvm形式に変換するスクリプト集
+本プロジェクトは、自然言語形式の発話ログからプレイヤーの「人狼/村人」判定を行う機械学習モデルを構築する一連の処理スクリプト群です。各ステップはログ整形、特徴抽出、埋め込み生成、そしてモデル訓練の4段階に分かれています。
 
-## 概要
+---
 
-`/judgement_werewolf/libsvm/datasets/`内のtxtファイル（形式: `ラベル,テキスト`）を読み込み、3つの異なるワードエンベディング手法で処理し、libsvm形式で保存します。
+## 📂 構成概要
 
-## ファイル構成
+### 1. `log_formatter.py` - プレイヤー別ログ整形
 
-- `word2vec_processor.py` - Word2Vecによるエンベディング処理
-- `fasttext_processor.py` - FastTextによるエンベディング処理  
-- `bert_processor.py` - BERTによるエンベディング処理
-- `run_all_embeddings.py` - 全手法を統合実行するスクリプト
-- `README.md` - このファイル
+* 元の人狼ログ（`.log`）を加工し、\*\*プレイヤー単位のテキストファイル（`.txt`）\*\*へ分割保存します。
+* 発話行から、話者の役職（人狼 or 村人）を基にラベル（1:人狼, 0:村人）を付与。
+* プレイヤーごとにラベル付き発話行を出力。
+* 出力形式：
 
-## 使用方法
+  ```
+  <ラベル>,<発話内容>
+  ```
 
-### 個別実行
+---
 
-```bash
-# Word2Vec処理のみ
-python word2vec_processor.py
+### 2. `{bert, fasttext, word2vec}_processor.py` - 埋め込み生成スクリプト
 
-# FastText処理のみ
-python fasttext_processor.py
+#### 共通点
 
-# BERT処理のみ
-python bert_processor.py
+* `datasets/data/` 配下の各 `.txt` ファイルを読み込み、文単位で特徴ベクトルを生成。
+* 各発話文を `libsvm` 形式に変換し保存。
+* ラベルは `+1`（人狼） または `-1`（村人）として出力。
+* 出力形式例（libsvm）:
+
+  ```
+  1 1:0.234 2:0.134 ... 768:0.556
+  ```
+
+#### 各埋め込みの特徴
+
+| ファイル名                   | 手法       | 特徴                                              |
+| ----------------------- | -------- | ----------------------------------------------- |
+| `bert_processor.py`     | BERT     | 事前学習済みの日本語BERTを利用して `[CLS]` ベクトルを抽出（代替TF-IDFあり） |
+| `fasttext_processor.py` | FastText | FastTextで訓練した単語ベクトルの平均（代替文字N-gram + TF-IDFあり）   |
+| `word2vec_processor.py` | Word2Vec | Word2Vecで訓練した単語ベクトルの平均（代替TF-IDFあり）              |
+
+---
+
+### 3. `train_werewolf_models.py` - 高精度モデル訓練（+ 可視化）
+
+* 各プレイヤー単位のlibsvmファイルを集約し、発話ベクトルをプレイヤー単位で統計的に集約（平均、標準偏差など）。
+* ラベルは**多数決によりプレイヤー単位で1 or 0に決定**。
+* `RandomForest`, `GradientBoosting`, `SVM`, `LogisticRegression` を訓練。
+* 5分割交差検証 + グリッドサーチにより最良モデルを選出。
+* 結果ファイルの保存：
+
+  * `.joblib`: 訓練済みモデル（全モデル + ベストモデル）
+  * `.txt`: 評価結果（各モデルのスコア・分類レポート）
+  * `.png`: モデル比較プロット（F1スコア・Accuracy）、混同行列
+
+---
+
+### 4. `train_remaining_models.py` - 軽量モデル訓練（FastText / BERT向け）
+
+* 精度よりも**訓練速度重視**で、簡易パラメータ設定（GridSearchなし）。
+* 上記スクリプトと同様にlibsvm形式からプレイヤー特徴量を集約し、モデルを訓練・保存します。
+
+---
+
+## 🗂️ 出力ファイル構成例
+
+```
+judgement_werewolf/
+├── libsvm/
+│   ├── datasets/
+│   │   ├── data/                         # log_formatterの出力（*.txt）
+│   │   └── word_embeding/
+│   │       ├── Word2Vec/*.libsvm        # Word2Vec処理済み
+│   │       ├── FastText/*.libsvm        # FastText処理済み
+│   │       └── BERT/*.libsvm            # BERT処理済み
+│   └── models/
+│       ├── Word2Vec/
+│       │   ├── best_model_word2vec.joblib
+│       │   ├── training_results_word2vec.txt
+│       │   └── model_comparison_word2vec.png 等
+│       └── ...
 ```
 
-### 全手法一括実行
+---
 
-```bash
-# 3つの手法すべてを実行
-python run_all_embeddings.py
-```
+## 🧩 各ファイルの役割（まとめ）
 
-## 出力
+| ファイル                        | 役割                                 |
+| --------------------------- | ---------------------------------- |
+| `log_formatter.py`          | 生ログをプレイヤー別のラベル付きテキストに整形            |
+| `bert_processor.py`         | BERTで発話を埋め込み、libsvm形式で保存           |
+| `fasttext_processor.py`     | FastTextで発話を埋め込み、libsvm形式で保存       |
+| `word2vec_processor.py`     | Word2Vecで発話を埋め込み、libsvm形式で保存       |
+| `train_werewolf_models.py`  | 高精度モデル（GridSearch付き）を訓練 + 評価 + 可視化 |
+| `train_remaining_models.py` | 軽量モデル（簡易設定）を訓練                     |
 
-各手法で処理されたファイルは以下のディレクトリに保存されます：
+---
 
-- `Word2Vec/` - Word2Vec処理結果（100次元）
-- `FastText/` - FastText処理結果（100次元）
-- `BERT/` - BERT処理結果（768次元 or 代替手法の次元数）
+## 🔖 備考
 
-## 出力形式
+* MeCabやtransformers、fasttextなどの外部ライブラリが存在しない環境でも代替処理（TF-IDF+SVD）で動作可能。
+* 各処理は例外処理を含み、欠損ファイルや構文エラーに対して堅牢に対応。
 
-libsvm形式で保存されます：
-
-```
--1 1:0.123456 3:0.789012 5:0.345678
-1 2:0.456789 4:0.123456 6:0.789012
-```
-
-- 最初の数値: ラベル（1=人狼、-1=人間）
-- 後続: `特徴番号:値` の形式
-
-## 依存ライブラリ
-
-### 推奨ライブラリ
-
-```bash
-pip install gensim fasttext transformers torch scikit-learn numpy
-```
-
-### フォールバック
-
-必要なライブラリがインストールされていない場合、scikit-learnベースの代替手法で動作します：
-
-- **Word2Vec代替**: TF-IDF + SVD
-- **FastText代替**: 文字n-gram TF-IDF + SVD  
-- **BERT代替**: 高次元TF-IDF + SVD
-
-### 日本語処理（オプション）
-
-```bash
-pip install mecab-python3
-```
-
-MeCabがない場合は正規表現ベースの簡易トークナイザーを使用します。
-
-## 処理詳細
-
-### Word2Vec処理
-- 全テキストでWord2Vecモデルを訓練
-- 各文書の単語ベクトルを平均化
-- 100次元のベクトル表現を生成
-
-### FastText処理
-- サブワード情報を考慮したエンベディング
-- 文字n-gramによる未知語対応
-- 100次元のベクトル表現を生成
-
-### BERT処理
-- 事前訓練済み日本語BERTモデルを使用
-- [CLS]トークンの表現を文書ベクトルとして使用
-- 768次元のベクトル表現を生成
-
-## 設定のカスタマイズ
-
-各プロセッサのコンストラクタでパラメータを調整可能：
-
-```python
-# Word2Vec設定例
-processor = Word2VecProcessor(
-    vector_size=200,  # ベクトル次元数
-    window=10,        # 文脈ウィンドウサイズ
-    epochs=20         # 学習エポック数
-)
-
-# FastText設定例
-processor = FastTextProcessor(
-    dim=200,          # ベクトル次元数
-    epoch=20,         # 学習エポック数
-    min_count=2       # 最小出現回数
-)
-
-# BERT設定例
-processor = BERTProcessor(
-    model_name="cl-tohoku/bert-base-japanese",  # 使用モデル
-    max_length=256,                             # 最大トークン長
-    batch_size=16                               # バッチサイズ
-)
-```
-
-## 注意事項
-
-1. **メモリ使用量**: BERTは大量のメモリを使用します
-2. **処理時間**: BERTは特に時間がかかります（GPU推奨）
-3. **ファイル数**: 254個のファイル × 3手法 = 762個のlibsvmファイルが生成されます
-
-## トラブルシューティング
-
-### CUDA out of memory
-BERTでGPUメモリ不足の場合：
-```python
-processor = BERTProcessor(batch_size=1)  # バッチサイズを小さく
-```
-
-### ライブラリ不足
-代替手法が自動的に使用されますが、元のライブラリのインストールを推奨：
-```bash
-pip install gensim fasttext transformers
-```
+---
