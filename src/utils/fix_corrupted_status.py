@@ -55,7 +55,7 @@ def fix_corrupted_status_file(file_path: Path):
 
 def main():
     """メイン関数"""
-    status_base_path = Path("/home/bi23056/lab/aiwolf-nlp-agent-llm/info/status")
+    status_base_path = Path("info/status")
     
     # 破損したファイルを検索
     corrupted_files = []
