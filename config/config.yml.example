@@ -1,0 +1,291 @@
+web_socket:
+  url: ws://127.0.0.1:8080/ws
+  token:
+  auto_reconnect: false
+
+agent:
+  num: 5
+  team: kanolab
+  kill_on_timeout: true
+
+llm:
+  type: openai
+  sleep_time: 0
+
+openai:
+  model: gpt-4o-mini
+  temperature: 0.7
+
+google:
+  model: gemini-2.0-flash-lite
+  temperature: 0.7
+
+ollama:
+  model: llama3.1
+  temperature: 0.7
+  base_url: http://localhost:11434
+
+prompt:
+  initialize: |-
+    あなたは人狼ゲームのエージェントです。
+    あなたの名前は{{ info.agent }}です。
+    あなたの役職は{{ role.value }}です。
+
+    これからゲームを進行していきます。リクエストが来た際には、適切な応答を返してください。
+
+    トークリクエストと囁きリクエストに対しては、ゲーム内で発言するべき内容のみを出力してください。
+    履歴がある場合は、それを参考にしてください。ない場合は、適切な内容を出力してください。
+    これ以上の情報を得られないと考えたときなどトークを終了したい場合については「Over」と出力してください。
+
+    他のリクエストに対しては、行動の対象となるエージェントの名前のみを出力してください。
+    対象となる生存しているエージェントの一覧が付与されています。
+
+    {% if info.profile is not none -%}
+    あなたのプロフィール: {{ info.profile }}
+    {%- endif %}
+
+    あなたのレスポンスはそのままゲーム内に送信されるため、不要な情報を含めないでください。
+  daily_initialize: |-
+    昼開始リクエスト
+    {{ info.day }}日目
+    {% if info.medium_result is not none -%}
+    霊能結果: {{ info.medium_result }}
+    {%- endif %}
+    {% if info.divine_result is not none -%}
+    占い結果: {{ info.divine_result }}
+    {%- endif %}
+    {% if info.executed_agent is not none -%}
+    追放結果: {{ info.executed_agent }}
+    {%- endif %}
+    {% if info.attacked_agent is not none -%}
+    襲撃結果: {{ info.attacked_agent }}
+    {%- endif %}
+    {% if info.vote_list is not none -%}
+    投票結果: {{ info.vote_list }}
+    {%- endif %}
+    {% if info.attack_vote_list is not none -%}
+    襲撃投票結果: {{ info.attack_vote_list }}
+    {%- endif %}
+  whisper: |-
+    囁きリクエスト
+    履歴:
+    {% for w in whisper_history[sent_whisper_count:] -%}
+    {{ w.agent }}: {{ w.text }}
+    {% endfor %}
+  talk: |-
+    トークリクエスト
+    履歴:
+    {% for w in talk_history[sent_talk_count:] -%}
+    {{ w.agent }}: {{ w.text }}
+    {% endfor %}
+    {% if intention_data -%}
+    
+    あなたの現在のintention（発話意図）:
+    - 発話構成: {{ intention_data.consist }}
+    - 具体的内容: {{ intention_data.content }}
+    
+    上記のintentionを参考に、適切な発話を生成してください。
+    {%- endif %}
+  daily_finish: |-
+    昼終了リクエスト
+    {{ info.day }}日目
+    {% if info.medium_result is not none -%}
+    霊能結果: {{ info.medium_result }}
+    {%- endif %}
+    {% if info.divine_result is not none -%}
+    占い結果: {{ info.divine_result }}
+    {%- endif %}
+    {% if info.executed_agent is not none -%}
+    追放結果: {{ info.executed_agent }}
+    {%- endif %}
+    {% if info.attacked_agent is not none -%}
+    襲撃結果: {{ info.attacked_agent }}
+    {%- endif %}
+    {% if info.vote_list is not none -%}
+    投票結果: {{ info.vote_list }}
+    {%- endif %}
+    {% if info.attack_vote_list is not none -%}
+    襲撃投票結果: {{ info.attack_vote_list }}
+    {%- endif %}
+  divine: |-
+    占いリクエスト
+    対象:
+    {% for k, v in info.status_map.items() -%}
+    {%- if v == 'ALIVE' -%}
+    {{ k }}
+    {% endif -%}
+    {%- endfor %}
+  guard: |-
+    護衛リクエスト
+    対象:
+    {% for k, v in info.status_map.items() -%}
+    {%- if v == 'ALIVE' -%}
+    {{ k }}
+    {% endif -%}
+    {%- endfor %}
+  vote: |-
+    投票リクエスト
+    対象:
+    {% for k, v in info.status_map.items() -%}
+    {%- if v == 'ALIVE' -%}
+    {{ k }}
+    {% endif -%}
+    {%- endfor %}
+  attack: |-
+    襲撃リクエスト
+    対象:
+    {% for k, v in info.status_map.items() -%}
+    {%- if v == 'ALIVE' -%}
+    {{ k }}
+    {% endif -%}
+    {%- endfor %}
+  extract_self_co: |-
+    以下の{{ agent_name }}の発言履歴から、このエージェントが自分の役職について何と申告（カミングアウト）しているかを判定してください。
+    
+    発言履歴:
+    {% for talk in talk_history -%}
+    {{ talk.text }}
+    {% endfor %}
+    
+    もし役職をカミングアウトしている場合は、その役職名のみを出力してください。
+    カミングアウトしていない場合は「なし」と出力してください。
+    
+    役職の種類: 村人、占い師、霊能者、狩人、人狼、狂人、人間、白、黒
+  extract_seer_co: |-
+    以下の発言履歴から、占い師を名乗るエージェントが各エージェントの占い結果をどのように報告しているかを抽出してください。
+    
+    発言履歴:
+    {% for talk in talk_history -%}
+    {{ talk.agent }}: {{ talk.text }}
+    {% endfor %}
+    
+    占い結果がある場合は、以下の形式で出力してください:
+    エージェント名: 占い結果（人狼、黒または人間、白）
+    
+    占い結果がない場合は、何も出力しないでください。
+  analyze_message_type: |-
+    以下の発言を分析して、発話のタイプを判定してください。
+    
+    発言内容: {{ content }}
+    
+    参加エージェント: {{ agent_names|join(', ') }}
+    
+    発話タイプは以下の優先順位で判定してください（複数のタイプが含まれる場合は最も優先順位が高いものを選択）:
+    1. co: 自分の役職についてカミングアウトしている場合、または占い師や霊媒師が他のエージェントの役職を報告している場合
+    2. question: 誰かに対する質問が含まれている場合
+    3. negative: 誰かを疑う内容や誰かに対するマイナスな内容が含まれている場合
+    4. positive: 誰かに対する肯定的な内容が含まれている場合
+    5. null: 上記のいずれにも該当しない場合
+    
+    判定結果のタイプのみを出力してください（co、question、negative、positive、nullのいずれか）。
+  analyze_target_agents: |-
+    以下の発言を分析して、誰に対する発言かを判定してください。
+    
+    発言内容: {{ content }}
+    
+    参加エージェント: {{ agent_names|join(', ') }}
+    
+    判定ルール:
+    - 特定のエージェント名が含まれている場合は、そのエージェント名を出力
+    - 複数のエージェントが対象の場合は、カンマ区切りで出力
+    - 全体に向けた発言の場合は「all」を出力
+    - 特定の対象がない場合は「null」を出力
+    
+    判定結果のみを出力してください。
+  generate_desire: |-
+    あなたは人狼ゲームの{{ role }}エージェント（{{ agent_name }}）です。
+    
+    現在の状況に基づいて、以下のルールが発動しました：
+    ルール名: {{ rule_name }}
+    
+    実行すべき行動: {{ then }}
+    
+    補足説明: {{ supplement }}
+    
+    上記の「実行すべき行動」と「補足説明」を参考に、あなたの現在の願望や意図を表すdesire文（願望文）を生成してください。
+    
+    desire文の要件：
+    - 一人称で書く（「私は～したい」「私の目標は～」など）
+    - 具体的で行動指向の内容にする
+    - 人狼ゲームの戦略的観点を含める
+    - 1-2文で簡潔にまとめる
+    
+    例：
+    - 「私は自分の役職を適切なタイミングで開示し、村人たちの信頼を得たい」
+    - 「私は議論を活性化させ、怪しい人物を特定するための情報を集めたい」
+    - 「私は疑われている状況を打開し、他の村人に疑いを向けたい」
+    
+    desire文のみを出力してください。
+  generate_desire_from_policy: |-
+    あなたは人狼ゲームの分析エージェントです。
+    
+    以下のポリシールールは現在の状況では実行できていないルールです。
+    これらのルールから、エージェントが現在抱いている願望や意図を自然な日本語で表現してください。
+    
+    実行できていないポリシールール:
+    {{ policy_rules }}
+    
+    {% if game_context -%}
+    現在のゲーム状況:
+    {{ game_context }}
+    {%- endif %}
+    
+    上記のルールを踏まえて、このエージェントが現在抱いている願望や意図を表現してください。
+    
+    要件：
+    - 1-3文程度で簡潔に
+    - 具体的で実行可能な内容
+    - 人狼ゲームの戦略的観点を含む
+    - 一人称で記述（「私は～したい」など）
+    
+    例：
+    - 「私は占い師COをして村人たちの信頼を獲得したい」
+    - 「私は怪しい人物への投票を呼びかけて議論を誘導したい」
+    - 「私は疑いを晴らすために積極的に発言し、他の人物に疑念を向けたい」
+    
+    願望:
+  intention_generation: |-
+    あなたは人狼ゲームのエージェント（{{ agent_name }}）です。
+    
+    以下は現在までの対話ログです：
+    {{ analysis_data }}
+    
+    現在の状況：
+    1. 以下の発言（request_count={{ latest_select_sentence_request_count }}）に返事をしたいです：
+    「{{ latest_select_sentence_content }}」
+    
+    2. 以下の願望（request_count={{ latest_desire_request_count }}）を叶えたいです：
+    「{{ latest_desire_content }}」
+    
+    参考情報：
+    - エージェントの状態: {{ status_data }}
+    - 自分の発言履歴: {{ my_log_data }}
+    
+    上記1と2を満たすための発話について、以下の2点を検討して、intentionとして生成してください。
+    
+    consist: 発話はどのような構成にすれば、他エージェントの信頼を得たうえで、1と2の両方を満たす発話ができると思うか、心理学を応用して、発話の構成を考えてください。
+    
+    content: 1と2を満たすために自分が他エージェントに伝えるべき具体的な事項やトピックは何か考えてください。
+    
+    以下の形式で出力してください：
+    consist: [発話構成についての説明]
+    content: [具体的な事項やトピックについての説明]
+
+log:
+  console_output: true
+  file_output: true
+  output_dir: ./log
+  level: debug
+
+  request:
+    name: false
+    initialize: false
+    daily_initialize: false
+    whisper: true
+    talk: true
+    daily_finish: false
+    divine: true
+    guard: true
+    vote: true
+    attack: true
+    finish: false

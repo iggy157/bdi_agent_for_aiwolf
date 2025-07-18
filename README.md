@@ -32,11 +32,21 @@ pip install -e .
 
 ```bash
 # 役職情報,発話内容の形式にログを整形
-python /judgement_werewolf/libsvm/data/log_formatter_player_split.py
+python judgement_werewolf/libsvm/log_formatter_player_split.py
+# numpyインストール
+pip install numpy
+# scikit-learnインストール
+pip install scikit-learn
 # libsvm形式に変換
-python /judgement_werewolf/libsvm/word_embeding/run_all_embedings.py
+python judgement_werewolf/libsvm/run_all_embeddings.py
+# pandasインストール
+pip install pandas
+# matplotlib
+pip install matplotlib
+# seabornインストール
+pip install seaborn
 # 訓練
-python /judgement_werewolf/libsvm/word_embeding/train_werewolf_models.py
+python judgement_werewolf/libsvm/train_werewolf_models.py
 ```
 /judgement_werewolf/libsvm/models/にモデルや結果が保存されます。
 ベストモデル(/judgement_werewolf/libsvm/models/Word2Vec/best_model_word2vec.joblib)を呼び出して使用してください。
