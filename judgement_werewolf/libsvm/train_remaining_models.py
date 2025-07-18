@@ -242,8 +242,6 @@ class SimpleWerewolfTrainer:
             raise
 
 def main():
-    """Train FastText and BERT models"""
-    base_path = "/home/bi23056/lab/aiwolf-nlp-agent-llm/judgement_werewolf/libsvm"
     
     for embedding_type in ['FastText', 'BERT']:
         print(f"\n{'='*60}")
@@ -251,8 +249,9 @@ def main():
         print(f"{'='*60}")
         
         try:
-            data_path = f"{base_path}/datasets/word_embeding/{embedding_type}"
-            model_path = f"{base_path}/models/{embedding_type}"
+            # パス設定
+            data_path = f"judgement_werewolf/libsvm/datasets/word_embeding/{embedding_type}"
+            model_path = f"judgement_werewolf/libsvm/models/{embedding_type}"
             
             trainer = SimpleWerewolfTrainer(data_path, model_path, embedding_type)
             trainer.train()

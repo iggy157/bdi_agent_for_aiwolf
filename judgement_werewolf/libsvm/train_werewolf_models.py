@@ -438,9 +438,7 @@ class WerewolfModelTrainer:
 
 
 def main():
-    """メイン実行関数"""
-    # ベースパス
-    base_path = "/home/bi23056/lab/aiwolf-nlp-agent-llm/judgement_werewolf/libsvm"
+
     
     # 各埋め込み手法に対してモデル訓練
     embedding_types = ['Word2Vec', 'FastText', 'BERT']
@@ -452,8 +450,8 @@ def main():
         
         try:
             # パス設定
-            data_path = f"{base_path}/datasets/word_embeding/{embedding_type}"
-            model_path = f"{base_path}/models/{embedding_type}"
+            data_path = f"judgement_werewolf/libsvm/datasets/word_embeding/{embedding_type}"
+            model_path = f"judgement_werewolf/libsvm/models/{embedding_type}"
             
             # トレーナー初期化
             trainer = WerewolfModelTrainer(data_path, model_path, embedding_type)
