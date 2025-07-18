@@ -36,8 +36,8 @@ class Word2VecProcessor:
     """Word2Vec処理クラス"""
     
     def __init__(self, 
-                 source_path: str = "/home/bi23056/lab/aiwolf-nlp-agent-llm/judgement_werewolf/libsvm/datasets",
-                 output_path: str = "/home/bi23056/lab/aiwolf-nlp-agent-llm/judgement_werewolf/libsvm/datasets/word_embeding/Word2Vec",
+                 source_path: str = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/datasets/data",
+                 output_path: str = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/datasets/word_embeding/Word2Vec",
                  vector_size: int = 100,
                  window: int = 5,
                  min_count: int = 1,
