@@ -84,7 +84,7 @@ def run_all_embeddings():
     print("="*60)
     
     # 結果の確認
-    base_path = Path("/home/bi23056/lab/aiwolf-nlp-agent-llm/judgement_werewolf/libsvm/datasets/word_embeding")
+    base_path = Path("judgement_werewolf/libsvm/datasets/word_embeding")
     
     for method in ["Word2Vec", "FastText", "BERT"]:
         method_path = base_path / method

@@ -210,8 +210,8 @@ class LogFormatterPlayerSplit:
 def main():
     """メイン実行関数"""
     # パスの設定
-    source_base_path = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/raw_data"
-    output_base_path = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/datasets/data"
+    source_base_path = "judgement_werewolf/libsvm/raw_data"
+    output_base_path = "judgement_werewolf/libsvm/datasets/data"
     
     # フォーマッターを初期化
     formatter = LogFormatterPlayerSplit(source_base_path, output_base_path)

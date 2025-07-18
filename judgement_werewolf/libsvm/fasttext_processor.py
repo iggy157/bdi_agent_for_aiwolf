@@ -36,8 +36,8 @@ class FastTextProcessor:
     """FastText処理クラス"""
     
     def __init__(self, 
-                 source_path: str = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/datasets/data",
-                 output_path: str = "/home/bi23056/lab/bdi_agent_for_aiwolf/judgement_werewolf/libsvm/datasets/word_embeding/FastText",
+                 source_path: str = "judgement_werewolf/libsvm/datasets/data",
+                 output_path: str = "judgement_werewolf/libsvm/datasets/word_embeding/FastText",
                  dim: int = 100,
                  epoch: int = 10,
                  min_count: int = 1):
